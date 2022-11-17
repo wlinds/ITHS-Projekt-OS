@@ -1,5 +1,7 @@
 import pandas as pd
 from hash import hash_region
+import dash
+
 
 # testing
 
@@ -16,3 +18,5 @@ country = "Germany"
 hashed_series = hash_region(df_merge, country) # Replace columns
 print(hashed_series.head())
 
+if __name__ == "__main__":
+    app.run
