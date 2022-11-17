@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 import dash
 import os
-from dash import callback, html, Input, Output, dash_table
+from dash import callback, html, Input, Output, dash_table, dcc
 import dash_bootstrap_components as dbc
 import plotly_express as px
 from hash import hash_names
@@ -22,34 +22,33 @@ df1 = pd.read_csv("Data/noc_regions.csv",usecols=['region', 'NOC']) #### NOC: Na
 # replace column Name with all hashed names (not germany only)
 df1["Name"] = hash_names(df, "Name")
 
-# merge both files with corresconding columns
+# merge both files with corresconding columns - why are we doing this? /will
 df_merge = df1.merge(df, on="NOC",how = "left")
-
-df_germany = df_merge[df_merge["region"] == "Germany"]
-
-medals =pd.pivot_table(
-    df_germany,
-    values="Year",
-    index="Sport",
-    columns="Medal",
-    aggfunc="count",
-    
-    margins=True,
-    
-    margins_name="Total",).fillna(0).sort_values(by = "Total", ascending= False).iloc[1: , :].head(10) 
-
-print(medals)
-
 
 
 ## This does nothing at the moment - just leftover from trying buttons and forms
-## We eill need the callback and layout structures for the app later
+## We will need the callback and layout structures for the app later
 
 # https://dash.plotly.com/basic-callbacks
+
+app.layout = html.Div([
+    html.H6("Change the value in the text box to see callbacks in action!"),
+    html.Div([
+        "Input: ",
+        dcc.Input(id='my-input', value='initial value', type='text')
+    ]),
+    html.Br(),
+    html.Div(id='my-output'),
+
+])
+
+
 @app.callback(
-    output=Output("paragraph_id", "children"),
-    inputs=Input("button_id", "n_clicks"),
+    Output(component_id='my-output', component_property='children'),
+    Input(component_id='my-input', component_property='value')
 )
+def update_output_div(input_value):
+    return f'Output: {input_value}'
 
 def callback(n_clicks):
     return [f"Called {n_clicks} times"]
