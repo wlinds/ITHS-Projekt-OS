@@ -2,34 +2,29 @@ from __future__ import annotations
 import pandas as pd
 import hashlib
 
-def hash_region(df_merge, country: str) -> pd.Series:
-    """Returns column with hashed ahtlete names as pd.series."""
+def hash_names(df, select_column: str) -> pd.Series:
+    """Returns series with hashed ahtlete names."""
 
-    #df_merge["region"] = df_merge["region"].astype(str)
+    # Need exception and error handling for inputs
+    df[select_column] = df[select_column].astype(str) # <- Makes sure column contain strings
 
-    # Slice country parameter from DataFrame
-    df_germany = df_merge[df_merge["region"] == country]
+    # Previously anonymized names from column 1 in df specified by argument "Team" or "Region", that's why we used iloc[:,1] to get Name
+    # Now we pass entire df as argument and use "Name" as key to find athlete name column
 
     # Lambda function for encoding, hashing and digest hex
-    return df_germany.iloc[:,2].apply(
+    return df[select_column].apply(
         lambda x: hashlib.sha256(x.encode()).hexdigest())
 
 
 if __name__ == "__main__":
-    # first data file
+    # Testing
     df = pd.read_csv("Data/athlete_events.csv", usecols=['Name', 'Age', 'Sex', 'Team', 'NOC','Games','Year','Sport','Medal'])
-    df.head()
-
-    # second data file
     df1 = pd.read_csv("Data/noc_regions.csv",usecols=['region', 'NOC']) #### NOC: National Olympic Committee
-    df1.head() 
+
+    # replace column Name with all hashed names (not germany only)
+    df1["Name"] = hash_names(df, "Name")
+
     # merge both the files with corresconding columns
     df_merge = df1.merge(df, on="NOC",how = "left")
-    df_merge.head()
 
-
-    country = "Iceland" # test lol
-
-    hashed_series = hash_region(df_merge, country) # Replace columns
-
-    print(hashed_series.head())
+    print(df1["Name"])
