@@ -20,8 +20,11 @@
 
 # ----- Sport statistics: ----- #
 
-# [Medals]
-# Dropdown as 
+# Football (country/region)
+# Dropdown -> Top Medals by country
+#          -> Number of persons from country represented in sport
+#          ->
 
-# Medals dropdown ->  Select sport.
+# Athletics 
 
+# Cross country skiing 
