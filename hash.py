@@ -1,7 +1,6 @@
 from __future__ import annotations
 import pandas as pd
 import hashlib
-<<<<<<< HEAD
 # first data file
 df = pd.read_csv("../Project/OlympicsData/athlete_events.csv", usecols=['Name', 'Age', 'Sex', 'Team', 'NOC','Games','Year','Sport','Medal'])
 df.head()
@@ -31,7 +30,6 @@ def hash_team(df_merge, country: str) -> pd.Series:
 country = "Germany"
 
 hash_team(df_merge, country)
-=======
 
 def hash_names(df, select_column: str) -> pd.Series:
     """Returns series with hashed ahtlete names."""
@@ -58,4 +56,3 @@ if __name__ == "__main__":
     df_merge = df1.merge(df, on="NOC",how = "left")
 
     print(df1["Name"])
->>>>>>> 918c2c9f14e5b135da359bb121f40bc434e3912b
