@@ -28,8 +28,10 @@ app.title="Untitled"
 
 path_a, path_b = "Data/athlete_events.csv", "Data/noc_regions.csv"
 external_stylesheets = 'default.css' # css used for styling, can be changed
-external_scripts = [] # for javascript
-                      
+external_scripts = [] # for javascript if we want to add
+
+# ----- Begin functions ----- #
+
 def extract_data(path_a, path_b): 
     """Takes two csv files, calls hash.py, merges and returns DataFrame.""" #TODO: Create nice parameters (What to hash, which columns to use etc.)
 
@@ -45,7 +47,7 @@ def extract_data(path_a, path_b):
     return df1.merge(df, on="NOC", how = "left")
 
 
-
+# test function for medals
 def plot_test(value):
     """Test plotting function."""
     fig = px.bar(value, x="Country",
@@ -93,10 +95,7 @@ country_li.pop(159) # Remove missing value, idk why there's a missing value, but
 # Test box
 app.layout = html.Div([
     html.H2("Search country:", ),
-    html.Div([
-        "my-input-name: ",
-        dcc.Input(id='user-input', value=None)
-    ]),
+    html.Div([dcc.Input(id='user-input', value=None)]),
     html.Br(),
     html.Div(id='my-output'),
 ])
@@ -105,41 +104,19 @@ app.layout = html.Div([
     Output(component_id='my-output', component_property='children'),
     Input(component_id='user-input', component_property='value'))
 
+# Function to predict country from user input keys
+# TODO: defaults to list item[0], Afghanistan, while no input is present (should: clear input) 
 def regex_filter(value):
     test_list = country_li
     r = re.compile(value)
     filtered_list = list(filter(r.match, test_list))
     if len(filtered_list) != 0:
+        print(f'{value=}', {filtered_list[0]})
         return filtered_list[0]
-    else: return "None"
-
-    #return f' Prediction="{input_value}"'
-
-    r = re.compile('.*({}).*'.format(input_value))
-    filtered_list = list(filter(r.match, country_li))
+    else: return "No country found: Did you mean: 'suggested value'" # TODO
 
 def update_output_div(input_value):
     return regex_filter(input_value)
-
-
-    # if input_value == "S":
-    #     return 'Search prediction: Sweden'
-    # elif input_value == "G":
-    #     return 'Search prediction: Germany'
-    # else: return f'Search prediction: {input_value}'
-
-    # I have some ideas on how to make this!! ^ See this as pseudocode. lmk if u get any ideas!
-
-test_list = ["Sweden", "Denmark", "Germany"]
-print(country_li[0:10])
-print(test_list)
-print(country_li)
-print(len(country_li))
-
-#dup = {x for x in country_li if country_li.count(x) > 1}
-#print(dup)
-
-print(country_li[159])
 
 if __name__ == '__main__':
     app.run_server(debug=True)
