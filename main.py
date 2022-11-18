@@ -1,4 +1,14 @@
-# Typ TODO: Info om använding och projekt etc. länkar, etc.
+from __future__ import annotations
+
+# TODO: Info om använding och projekt etc. länkar, etc.
+
+
+# Formalia:
+# - Are we doing 'this' or "this"? -- rn i'm doing both... /wil
+# - Should we do the layout in here or in other .py?
+# - Should we have other scripts for functions or everything in main?
+#
+# </formalia>
 
 # Run this with `python app.py` and
 # visit http://127.0.0.1:8050/ in your web browser.
@@ -11,47 +21,125 @@ from dash import callback, html, Input, Output, dash_table, dcc
 import dash_bootstrap_components as dbc
 import plotly_express as px
 from hash import hash_names
+import re
 
 app = dash.Dash(__name__)
-external_stylesheet = 'default.css' # css used for styling
-df = pd.read_csv("Data/athlete_events.csv", usecols=['Name', 'Age', 'Sex', 'Team', 'NOC','Games','Year','Sport','Medal'])
-df1 = pd.read_csv("Data/noc_regions.csv",usecols=['region', 'NOC']) #### NOC: National Olympic Committee
+app.title="Untitled"
 
-#---------------------------------------------------------#
+path_a, path_b = "Data/athlete_events.csv", "Data/noc_regions.csv"
+external_stylesheets = 'default.css' # css used for styling, can be changed
+external_scripts = [] # for javascript
+                      
+def extract_data(path_a, path_b): 
+    """Takes two csv files, calls hash.py, merges and returns DataFrame.""" #TODO: Create nice parameters (What to hash, which columns to use etc.)
 
-# replace column Name with all hashed names (not germany only)
-df1["Name"] = hash_names(df, "Name")
+    df = pd.read_csv(path_a,
+        usecols=['Name', 'Age', 'Sex', 'Team', 'NOC', 'Games', 'Year', 'Sport', 'Medal'])  # Could be selected with callback as parameters but it might be slow (?)
+    df1 = pd.read_csv(path_b,
+        usecols=['region', 'NOC'])
 
-# merge both files with corresconding columns - why are we doing this? /will
-df_merge = df1.merge(df, on="NOC",how = "left")
+    # Calling hash.py, hashing names
+    df["Name"] = hash_names(df, "Name")
+
+    # Left outer join merge, -> how to explain this (?) why isn't NOC already formatted in df
+    return df1.merge(df, on="NOC", how = "left")
 
 
-## This does nothing at the moment - just leftover from trying buttons and forms
-## We will need the callback and layout structures for the app later
 
-# https://dash.plotly.com/basic-callbacks
+def plot_test(value):
+    """Test plotting function."""
+    fig = px.bar(value, x="Country",
+    y=0,color ="Medal",
+    log_y = True,
+    labels={"value": "value", "0": "Number of medals"}, title= value)
+    return fig
 
+
+
+# ----- Begin main ----- #
+
+# Call function to create anonymized athlete name column in DataFrame and merge two input csv for all countries
+df = extract_data(path_a,path_b)
+
+# Change title 'region' to 'Country' (should we put this in extract_data function? /wil)
+df.rename(columns = {'region':'Country'}, inplace=True)
+
+# Country selector, can be changed.  -- We could make this into callback function to get user input to select any 'Country' value.
+df_GER = df.loc[df['Country'] == "Germany"]
+df_SWE = df.loc[df['Country'] == "Sweden"]
+#etc
+
+# List of all available Countries 
+country_li = df['Country'].unique().tolist()
+country_li.pop(159) # Remove missing value, idk why there's a missing value, but its gone now.
+
+
+
+#--------------------- Begin dash layout -------------------------------#
+
+
+
+
+
+
+
+
+
+# --------------------- Ideas ---------------- #
+
+# what if we did predictive text?
+# run input value into algorithm and return predicted country from DataFrame?
+
+# Test box
 app.layout = html.Div([
-    html.H6("Change the value in the text box to see callbacks in action!"),
+    html.H2("Search country:", ),
     html.Div([
-        "Input: ",
-        dcc.Input(id='my-input', value='initial value', type='text')
+        "my-input-name: ",
+        dcc.Input(id='user-input', value=None)
     ]),
     html.Br(),
     html.Div(id='my-output'),
-
 ])
-
 
 @app.callback(
     Output(component_id='my-output', component_property='children'),
-    Input(component_id='my-input', component_property='value')
-)
-def update_output_div(input_value):
-    return f'Output: {input_value}'
+    Input(component_id='user-input', component_property='value'))
 
-def callback(n_clicks):
-    return [f"Called {n_clicks} times"]
+def regex_filter(value):
+    test_list = country_li
+    r = re.compile(value)
+    filtered_list = list(filter(r.match, test_list))
+    if len(filtered_list) != 0:
+        return filtered_list[0]
+    else: return "None"
+
+    #return f' Prediction="{input_value}"'
+
+    r = re.compile('.*({}).*'.format(input_value))
+    filtered_list = list(filter(r.match, country_li))
+
+def update_output_div(input_value):
+    return regex_filter(input_value)
+
+
+    # if input_value == "S":
+    #     return 'Search prediction: Sweden'
+    # elif input_value == "G":
+    #     return 'Search prediction: Germany'
+    # else: return f'Search prediction: {input_value}'
+
+    # I have some ideas on how to make this!! ^ See this as pseudocode. lmk if u get any ideas!
+
+test_list = ["Sweden", "Denmark", "Germany"]
+print(country_li[0:10])
+print(test_list)
+print(country_li)
+print(len(country_li))
+
+#dup = {x for x in country_li if country_li.count(x) > 1}
+#print(dup)
+
+print(country_li[159])
 
 if __name__ == '__main__':
     app.run_server(debug=True)
