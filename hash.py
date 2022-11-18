@@ -11,13 +11,12 @@ def hash_names(df, select_column: str) -> pd.Series:
     # Previously anonymized names from column 1 in df specified by argument "Team" or "Region", that's why we used iloc[:,1] to get Name
     # Now we pass entire df as argument and use "Name" as key to find athlete name column
 
-    # Lambda function for encoding, hashing and digest hex
+    # Lambda function for encoding, hashing and digest hex TODO: Add salt
     return df[select_column].apply(
         lambda x: hashlib.sha256(x.encode()).hexdigest())
 
-
 if __name__ == "__main__":
-    # Testing
+    # Testing, this can be removed
     df = pd.read_csv("Data/athlete_events.csv", usecols=['Name', 'Age', 'Sex', 'Team', 'NOC','Games','Year','Sport','Medal'])
     df1 = pd.read_csv("Data/noc_regions.csv",usecols=['region', 'NOC']) #### NOC: National Olympic Committee
 
