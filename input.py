@@ -41,7 +41,12 @@ df_merge["Name"] = hash_column(df_merge)
 df_medals = pd.concat([df_merge, pd.get_dummies(df["Medal"])], axis=1)
 
 # Add Total medals column to dataframe
-df_medals["Total medals"] = df_medals["Bronze"] + df_medals["Gold"]+ df_medals["Silver"] 
+df_medals["Total medals"] = df_medals["Bronze"] + df_medals["Gold"]+ df_medals["Silver"]
+
+# # for land statstics sort out the country :germany
+df_germany = df_medals.query("region == 'Germany'")
+print(df_germany)
+
 
 if __name__ == "__main__":
 
