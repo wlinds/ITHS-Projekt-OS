@@ -1,155 +1,121 @@
-from __future__ import annotations
 
-# TODO: Info om använding och projekt etc. länkar, etc.
-
-# This app analyzes data from the olympic games.
-# Run this and visit http://127.0.0.1:8050/ in your web browser.
-
-import pandas as pd
-import numpy as np
-import dash
 import os
-from dash import callback, html, Input, Output, dash_table, dcc
+import pandas as pd
+from input import df_germany 
+import dash
+from dash import html
+from dash import dcc
 import dash_bootstrap_components as dbc
-import plotly_express as px
-from input import extract_data
-from input import OlympicData
-import re
-
-app = dash.Dash(__name__)
-app.title="Olympic Games"
-external_stylesheets = 'default.css'
-
-path_a, path_b = "Data/athlete_events.csv", "Data/noc_regions.csv"
-usecols = ['Name', 'Age', 'Sex', 'Team', 'NOC', 'Games', 'Year', 'Sport', 'Medal'] # cols to be selected when reading path_a
-
-# Example: df with all countries
-df_all = extract_data(path_a, path_b, usecols, hash=True, country_select="All")
-
-# Example: this creates df with Germany
-df_GER = extract_data(path_a, path_b, usecols, hash=True, country_select="Germany")
-
-# Example: List of all available Countries 
-country_li = df_all['Country'].unique().tolist()
-country_li.pop(159) # Remove missing value, idk why there's a missing value, but its gone now.
-
-# This creates df with all medals #TODO: Separate team medals from country medals
-df_medal = df_all.groupby("Country")[["Medal"]].count().sort_values(by = "Medal",ascending= False).head(10).reset_index()
-print(df_medal.head)
+import plotly.express as px
+from dash.dependencies import Input, Output
 
 
-df_GER2 = extract_data(path_a, path_b, ['Name', 'Age', 'NOC', 'Games', 'Year', 'Sport', 'Medal'], hash=True, country_select="Germany")
+# initialize app
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.UNITED]) # bootstrap theme
 
-#--------------------- Begin dash layout -------------------------------#
-
-# Only use Row and Col inside a Container. Set fluid=True to remove default container margins.
-# The immediate children of any Row component should always be Col components. Content/figs should go inside the Col components.
-
+# graph 1 is for age distribution
+fig1 = px.histogram(df_germany, x='Age', color = 'Sex',  title= "Histogram of ages")
 
 
-# Text field, H1, left
-def drawH1(Paragraph="Text"):
-    return html.Div([
-        dbc.Card(
-            dbc.CardBody([
-                html.Div([
-                    html.H1(Paragraph),
-                ], style={'textAlign': 'Left'}) 
-            ])
-        ),
-    ])
-
-# Text field, H4, Center
-def drawH4(Paragraph="Text"):
-    return html.Div([
-        dbc.Card(
-            dbc.CardBody([
-                html.Div([
-                    html.H4(Paragraph),
-                ], style={'textAlign': 'Center'}) 
-            ])
-        ),
-    ])
+# graph 2 for total number if womens from Germany participated in olympics
+df_female = df_germany.query("Sex == 'F'")
+fig2  = px.line(df_female, x='Year', y='Total medals', color='Season', markers=True, title = " Total number  medals got by females participated in Olympics")
 
 
-# Bar figure test
-def drawFigure():
-    return  html.Div([
-        dbc.Card(
-            dbc.CardBody([
-                dcc.Graph(
-                    figure=px.bar(
-                        df_medal, x="Medal", y="Country", title="Medals").update_layout(),
-                    config={
-                        'displayModeBar': False
-                    }
-                ) 
-            ])
+# set up layout
+app.layout = html.Div(children=[
+    # All elements from the top of the page
+    html.Div([
+        html.Div([
+            html.H1(children='Land Statstics: GERMANY'),
+
+            html.Div(children='''
+                Dash: Grapically represents Age histogram.
+            '''),
+            dcc.Dropdown(
+                options=[{'label': i, 'value': i} for i in df_germany.columns],
+                value='Age',
+                id='dropdown1',
+                style={"width": "50%", "offset":1,},
+                clearable=False,
+            ),
+
+            dcc.Graph(
+                id='histogram',
+                figure=fig1
+            ),
+
+        ], className='six columns'),
+        html.Div([
+            html.H1(children=''),
+
+            html.Div(children='''
+                Dash: Grapically represents women empowerment.
+            '''),
+            dcc.Dropdown(
+                options=[{'label': i, 'value': i} for i in df_germany.columns],
+                value='Sex',
+                id='dropdown2',
+                style={"width": "50%", "offset":1,},
+                clearable=False,
+            ),
+
+            dcc.Graph(
+                id='line',
+                figure=fig2
+            ),  
+        ], className='six columns'),
+    ], className='row'),
+    # New Div for all elements in the new 'row' of the page
+    html.Div([
+        html.H1(children='Hello Dash'),
+
+        html.Div(children='''
+            Dash: Top medal analysis.
+        '''),
+        dcc.Dropdown(
+                options=[{'label': i, 'value': i} for i in df_germany.columns],
+                value='Medal',
+                id='dropdown',
+                style={"width": "50%", "offset":1,},
+                clearable=False,
+            ),
+
+        dcc.Graph(
+            id='graph3',
+            figure=fig1
         ),  
-    ])
+    ], className='row'),
+])
 
-def drawFigure2():
-    return  html.Div([
-        dbc.Card(
-            dbc.CardBody([
-                dcc.Graph(
-                    figure=px.bar(
-                        df_medal, x="Medal", y="Country", title="Medals").update_layout(),
-                    config={
-                        'displayModeBar': False
-                    }
-                ) 
-            ])
-        ),  
-    ])
-
-# This function creates an input element which maps to 'user-input' and 'my-output' 
-def input_box():
-    return html.Div(
-        dbc.Card(
-            dbc.CardBody([
-            html.Div([
-                html.H4("Search country:", ),
-            html.Div([dcc.Input(id='user-input', value=None)]),
-                html.Br(),
-            html.Div(id='my-output')])
-    ])
-    ))
-
-def top_country_medals(my_country):
-    "Loops through selected medals, drops missing values. Returns list." # not very efficient but kinda works.
-    my_medal = ['Gold','Silver','Bronze']
-    medal_li = []
-    df_ger = extract_data(path_a, path_b, ['Name', 'NOC', 'Medal'], hash=False, country_select=my_country).dropna()
-    for count, i in enumerate(my_medal, start=0):
-        df1 = df_ger[df_ger.Medal == my_medal[count]]
-        medal_li.append(f"{i}: {len(df1)}. ")
-    medal_li.insert(0, my_country + ": ")
-    return medal_li
-
-def regex_filter(value): # Function to predict country from user input keys, TODO: defaults to list item[0], Afghanistan, while no input is present (should: clear input)
-    if value == None: # Prevents error for no user input
-        return None
-    test_list = country_li
-    r = re.compile(value)
-    filtered_list = list(filter(r.match, test_list))
-    if len(filtered_list) > 0:
-        print(f'{value=}', {filtered_list[0]})
-        return top_country_medals(filtered_list[0])
-    else: return "No country found: Did you mean: 'suggested value'" # TODO
-
+# callbacks
 @app.callback(
-      Output(component_id='my-output', component_property='children'),
-      Input(component_id='user-input', component_property='value'))
+    Output(component_id='histogram', component_property='figure'),
+    Output(component_id='line', component_property='figure'),
+    Output(component_id='histogram', component_property='figure'),
 
-def update_output_div(input_value):
-    if input_value == None:
-        return None
-    print(input_value)
-    return regex_filter(input_value)
+    Input(component_id='dropdown1', component_property='value'),
+    Input(component_id='dropdown2', component_property='value'),
+    Input(component_id='dropdown', component_property='value'),
+)
+
+
+def update_hist(feature):
+    fig1 = px.histogram(df_germany, x=feature)
+    return fig1
+
+def update_line(feature):
+    fig1 = px.histogram(df_germany, x=feature)
+    return fig1
+
+def update_hist(feature):
+    fig1 = px.histogram(df_germany, x=feature)
+    return fig1
 
 
 if __name__ == '__main__':
+    app.run_server(debug=True)
+
     
     app.layout = html.Div([
         dbc.Card(
