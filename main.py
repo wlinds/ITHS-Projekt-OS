@@ -1,4 +1,6 @@
+
 import os
+from __future__ import annotations
 import pandas as pd
 from input import df_germany
 import dash
@@ -111,6 +113,61 @@ def update_hist(feature):
     fig1 = px.histogram(df_germany, x=feature)
     return fig1
 
+
 if __name__ == '__main__':
     app.run_server(debug=True)
 
+    
+    app.layout = html.Div([
+        dbc.Card(
+            dbc.CardBody([
+                dbc.Row([
+                    dbc.Col([
+                        drawH1("Hi, I'm a title in H1, aligned left.")
+                    ], width=3),
+                    dbc.Col([
+                        drawH4("I'm a paragraph in H4, centered")
+                    ], width=3),
+
+                ], align='center'), 
+                html.Br(),
+                dbc.Row([
+                    dbc.Col([
+                        drawFigure() 
+                    ], width=3),
+                    dbc.Col([
+                        drawFigure()
+                    ], width=3),
+                    dbc.Col([
+                        drawFigure() 
+                    ], width=6),
+                ], align='center'), 
+                html.Br(),
+                dbc.Row([
+                    dbc.Col([
+                        drawFigure()
+                    ], width=9),
+                    dbc.Col([
+                        drawFigure()
+                    ], width=3),
+                ], align='center'),
+
+
+                dbc.Row([
+                    dbc.Col([
+                        input_box()
+                    
+                    ]),
+                    dbc.Col([
+                        drawFigure()
+                    ], width=9),
+                
+                
+
+
+                ])
+                   
+            ]), color = 'dark'
+        )
+    ])
+    app.run_server(debug=True)
