@@ -1,20 +1,25 @@
 from __future__ import annotations
 import pandas as pd
 import hashlib
-from input import df_germany
 
+def hash_column(df:pd.DataFrame, select_column: str="Name") -> pd.Series:
+    """Returns series with hashed ahtlete names as pd.series.
+    Attributes
+    ----------
+    df: pd.DataFrame
+        Input dataframe.
 
+    select_column: str
+        Selects column to hash. Defaults to Name.
 
-def hash_team(df_germany, select_column: str) -> pd.Series:
-    """Returns column with hashed ahtlete names as pd.series."""
+    """
 
     # not coverting to string because name is already a string
+    # what if future input contains non-string values /wil
 
     # Lambda function for encoding, hashing and digest hex
-    return df_germany[select_column].apply(
+    return df[select_column].apply(
         lambda x: hashlib.sha256(x.encode()).hexdigest())
 
-select_column = "Name"
-
-print(hash_team(df_germany, select_column))
-
+if __name__ == "__main__":
+    pass

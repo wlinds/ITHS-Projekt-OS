@@ -16,12 +16,6 @@ df_female = df_germany.query("Sex == 'F'")
 #df_germany = df_medals[df_medals["region"] == "Germany"]
 print(df_germany)
 
-
-
-
-
-
-
 # ------ Land statistics: ----- #
 
 #### Top 10 medals in germany
