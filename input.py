@@ -16,7 +16,7 @@ class OlympicData:
             # olympicname: athlete__events
             # resulting path : c:/Users/vinee/Documents/Github/Databehandling-Vineela-Nedunuri/Code-alongs/data/Aathlete__events.csv
         path = os.path.join(self._data_folder_path, olympicdata+".csv")
-        olympic = pd.read_csv(path, index_col = None, parse_dates = True)
+        olympic = pd.read_csv(path, index_col = None)
             
         return olympic
     
@@ -43,6 +43,10 @@ df_medals = pd.concat([df_merge, pd.get_dummies(df["Medal"])], axis=1)
 
 # Add Total medals column to dataframe
 df_medals["Total medals"] = df_medals["Bronze"] + df_medals["Gold"]+ df_medals["Silver"] 
-print(df_medals.head())  
+print(df_medals)  
+
+# # for land statstics sort out the country :germany
+df_germany = df_medals.query("region == 'Germany'")
+print(df_germany)
 
  
