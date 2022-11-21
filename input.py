@@ -59,3 +59,9 @@ if __name__ == "__main__":
     # Add Total medals column to dataframe
     df_medals["Total medals"] = df_medals["Bronze"] + df_medals["Gold"]+ df_medals["Silver"] 
     print(df_medals.head())
+    
+    print(df_medals)  
+
+    # # for land statstics sort out the country :germany
+    df_germany = df_medals.query("region == 'Germany'")
+    print(df_germany)
