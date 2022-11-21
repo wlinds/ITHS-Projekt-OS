@@ -18,7 +18,7 @@ print(df_germany)
 
 # What happened to the notes??? Did I remove them? /wil
 
-=======
+
 # ------ Land statistics: ----- #
 
 #### Top 10 medals in germany
@@ -42,5 +42,5 @@ print(df_germany)
 # Athletics 
 
 # Cross country skiing 
->>>>>>> main
+
 
