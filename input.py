@@ -2,19 +2,19 @@ import pandas as pd
 import os
 
 
-# create a function to read data
+# create a class for path of data
 class OlympicData:
     def __init__(self, data_folder_path:str) -> None:
         self._data_folder_path = data_folder_path
     
-    def olympic_dataframe(self, olympicdata:str)->list:
+    def olympic_dataframe(self, olympicdata:str)->list: # create a function to read csv files
 
-        """Create a function that joins the path of data folder """
+        """Create a function that joins the path of data folder and read csv files """
 
             # Example:
-            # data_floder: c:/Users/vinee/Documents/Github/Databehandling-Vineela-Nedunuri/Code-alongs/olympicdata
+            # data_floder: c:/Users/vinee/Documents/Github/Databehandling-Vineela-Nedunuri/Code-alongs/odata
             # olympicname: athlete__events
-            # resulting path : c:/Users/vinee/Documents/Github/Databehandling-Vineela-Nedunuri/Code-alongs/olympicdata/Aathlete__events.csv
+            # resulting path : c:/Users/vinee/Documents/Github/Databehandling-Vineela-Nedunuri/Code-alongs/data/Aathlete__events.csv
         path = os.path.join(self._data_folder_path, olympicdata+".csv")
         olympic = pd.read_csv(path, index_col = None, parse_dates = True)
             
