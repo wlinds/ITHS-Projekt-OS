@@ -19,6 +19,9 @@ print(df_germany)
 
 
 
+
+
+
 # ------ Land statistics: ----- #
 
 #### Top 10 medals in germany
