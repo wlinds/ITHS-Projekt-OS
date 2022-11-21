@@ -13,6 +13,7 @@ from dash import callback, html, Input, Output, dash_table, dcc
 import dash_bootstrap_components as dbc
 import plotly_express as px
 from input import extract_data
+from input import OlympicData
 import re
 
 app = dash.Dash(__name__)
@@ -46,26 +47,77 @@ df_GER2 = extract_data(path_a, path_b, ['Name', 'Age', 'NOC', 'Games', 'Year', '
 
 
 
-
-
-
-
-
-
-
-
-# --- Regex search box idea --- # 
-search_box = html.Div = (
-    html.Div([
-    html.H4("Search country:", ),
-    html.Div([dcc.Input(id='user-input', value=None)]),
-    html.Br(),
-    html.Div(id='my-output')
+# Text field, H1, left
+def drawH1(Paragraph="Text"):
+    return html.Div([
+        dbc.Card(
+            dbc.CardBody([
+                html.Div([
+                    html.H1(Paragraph),
+                ], style={'textAlign': 'Left'}) 
+            ])
+        ),
     ])
-    )
+
+# Text field, H4, Center
+def drawH4(Paragraph="Text"):
+    return html.Div([
+        dbc.Card(
+            dbc.CardBody([
+                html.Div([
+                    html.H4(Paragraph),
+                ], style={'textAlign': 'Center'}) 
+            ])
+        ),
+    ])
+
+
+# Bar figure test
+def drawFigure():
+    return  html.Div([
+        dbc.Card(
+            dbc.CardBody([
+                dcc.Graph(
+                    figure=px.bar(
+                        df_medal, x="Medal", y="Country", title="Medals").update_layout(),
+                    config={
+                        'displayModeBar': False
+                    }
+                ) 
+            ])
+        ),  
+    ])
+
+def drawFigure2():
+    return  html.Div([
+        dbc.Card(
+            dbc.CardBody([
+                dcc.Graph(
+                    figure=px.bar(
+                        df_medal, x="Medal", y="Country", title="Medals").update_layout(),
+                    config={
+                        'displayModeBar': False
+                    }
+                ) 
+            ])
+        ),  
+    ])
+
+# This function creates an input element which maps to 'user-input' and 'my-output' 
+def input_box():
+    return html.Div(
+        dbc.Card(
+            dbc.CardBody([
+            html.Div([
+                html.H4("Search country:", ),
+            html.Div([dcc.Input(id='user-input', value=None)]),
+                html.Br(),
+            html.Div(id='my-output')])
+    ])
+    ))
 
 def top_country_medals(my_country):
-    "Loops through selected medals, drops missing values. Returns list." # ot very efficient but kinda works.
+    "Loops through selected medals, drops missing values. Returns list." # not very efficient but kinda works.
     my_medal = ['Gold','Silver','Bronze']
     medal_li = []
     df_ger = extract_data(path_a, path_b, ['Name', 'NOC', 'Medal'], hash=False, country_select=my_country).dropna()
@@ -98,5 +150,57 @@ def update_output_div(input_value):
 
 
 if __name__ == '__main__':
-    app.layout = search_box
+    
+    app.layout = html.Div([
+        dbc.Card(
+            dbc.CardBody([
+                dbc.Row([
+                    dbc.Col([
+                        drawH1("Hi, I'm a title in H1, aligned left.")
+                    ], width=3),
+                    dbc.Col([
+                        drawH4("I'm a paragraph in H4, centered")
+                    ], width=3),
+
+                ], align='center'), 
+                html.Br(),
+                dbc.Row([
+                    dbc.Col([
+                        drawFigure() 
+                    ], width=3),
+                    dbc.Col([
+                        drawFigure()
+                    ], width=3),
+                    dbc.Col([
+                        drawFigure() 
+                    ], width=6),
+                ], align='center'), 
+                html.Br(),
+                dbc.Row([
+                    dbc.Col([
+                        drawFigure()
+                    ], width=9),
+                    dbc.Col([
+                        drawFigure()
+                    ], width=3),
+                ], align='center'),
+
+
+                dbc.Row([
+                    dbc.Col([
+                        input_box()
+                    
+                    ]),
+                    dbc.Col([
+                        drawFigure()
+                    ], width=9),
+                
+                
+
+
+                ])
+                   
+            ]), color = 'dark'
+        )
+    ])
     app.run_server(debug=True)
