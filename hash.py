@@ -1,10 +1,8 @@
 from __future__ import annotations
 import pandas as pd
 import hashlib
-from input import df_medals
+from input import df_germany
 
-# Slice country parameter from DataFrame
-df_germany = df_medals[df_medals["region"] == "Germany"]
 
 
 def hash_team(df_germany, select_column: str) -> pd.Series:
