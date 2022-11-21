@@ -7,6 +7,7 @@ from dash import html
 from dash import dcc
 import dash_bootstrap_components as dbc
 import plotly.express as px
+import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 
 
@@ -18,9 +19,18 @@ fig1 = px.histogram(df_germany, x='Age', color = 'Sex',  title= "Histogram of ag
 
 
 # graph 2 for total number if womens from Germany participated in olympics
-df_female = df_germany.query("Sex == 'F'")
-fig2  = px.line(df_female, x='Year', y='Total medals', color='Season', markers=True, title = " Total number  medals got by females participated in Olympics")
+df_female= df_germany[['Year','Sex',"Season"]]
+df_female = df_female[(df_female['Sex'] == 'F')]
+# separte data frame created
+females= df_female[['Year','Season']].value_counts().reset_index(name = 'count')
+fig2 = px.line(females, x = "Year" , y="count", markers=True, color= "Season", title = " Total number of females participated in Olympics")
 
+
+# graph 3 represents top 10 sports germany got medals
+df_medals = pd.DataFrame(df_germany.groupby("Sport")["Medal"].count().sort_values(ascending= False)).reset_index().head(10)
+fig3 = fig = px.bar(df_medals,x="Sport",
+    y="Medal",color = "Sport",
+    labels={"Sport": "Sport", "value": "Number of medals"}, title= "Top 10 sports in Germany won the most medals")
 
 # set up layout
 app.layout = html.Div(children=[
@@ -61,7 +71,7 @@ app.layout = html.Div(children=[
             ),
 
             dcc.Graph(
-                id='line',
+                id='scatter',
                 figure=fig2
             ),  
         ], className='six columns'),
@@ -82,8 +92,8 @@ app.layout = html.Div(children=[
             ),
 
         dcc.Graph(
-            id='graph3',
-            figure=fig1
+            id='bar',
+            figure=fig3
         ),  
     ], className='row'),
 ])
