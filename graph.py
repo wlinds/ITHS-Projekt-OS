@@ -16,7 +16,7 @@ df_female = df_germany.query("Sex == 'F'")
 #df_germany = df_medals[df_medals["region"] == "Germany"]
 print(df_germany)
 
-# What happened to the notes??? Did I remove them? /wil
+
 
 
 # ------ Land statistics: ----- #
