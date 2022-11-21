@@ -1,8 +1,7 @@
 
 import os
-from __future__ import annotations
 import pandas as pd
-from input import df_germany
+from input import df_germany 
 import dash
 from dash import html
 from dash import dcc
