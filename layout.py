@@ -1,5 +1,6 @@
 from dash import html, dcc
 import dash_bootstrap_components as dbc
+from graph import *
 
 def div1():
     return html.Div(

@@ -14,10 +14,10 @@ def age_gender_historgram():
     )
     return fig1
 
-# graph 3 represents top 10 sports germany got medals
+# graph 2 represents top 10 sports germany got medals
 
 
-def medal_graph():  #  graph 3 represents top 10 sports germany got medals
+def medal_graph():  #  graph 2 represents top 10 sports germany got medals
     df_medals = (
         pd.DataFrame(
             df_germany.groupby("Sport")["Medal"].count().sort_values(ascending=False)
@@ -75,6 +75,7 @@ def football_graph():
     fig = px.bar(sport, x="region",
     y=0,color ="Medal",text_auto=True,
     labels={"Sport": "Sport", "0": "Number of medals"}, title= "Countries who won medals on Football")
+    return fig
 
 
 
