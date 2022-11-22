@@ -44,11 +44,14 @@ df_medals["Total medals"] = df_medals["Bronze"] + df_medals["Gold"]+ df_medals["
 
 # # for land statstics sort out the country :germany
 df_germany = df_medals.query("region == 'Germany'")
-print(df_germany)
 
+# Create list with all regions
+all_region = df_merge['region'].dropna().unique().tolist()
+
+# Return any country as df
+def get_region(df=df_merge, region=None):
+    return df.loc[df['region'] == region]
 
 # # for land statstics sort out the country :germany
 df_germany = df_medals.query("region == 'Germany'")
 print(df_germany)
-
-
