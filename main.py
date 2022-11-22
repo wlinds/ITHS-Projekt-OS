@@ -49,7 +49,7 @@ app.layout = html.Div(children=[
             ),
 
             dcc.Graph(
-                id='histogram'),
+                id='histogram', fig = fig1),
 
         ], className='six columns'),
         html.Div([
@@ -67,7 +67,7 @@ app.layout = html.Div(children=[
             ),
 
             dcc.Graph(
-                id='scatter',
+                id='line',
                 figure=fig2
             ),  
         ], className='six columns'),
