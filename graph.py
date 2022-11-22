@@ -2,7 +2,8 @@ from __future__ import annotations
 from input import *
 import pandas as pd
 import plotly.express as px
-
+from dash import html, dcc
+import dash_bootstrap_components as dbc
 
 
 # graph 1 is for age distribution
@@ -103,15 +104,13 @@ def football_graph():
 # Athletics
 
 # Cross country skiing
-# Probably messy atm, just want to display it on the dashboard
 
 
-# function to get a reusable dataframe, needed for cross country skiing graphs
 def men_team_xcs_plot():
-    reusable_dataframe_xcs()
-
+    
+    reusable_df = df_merge
     # taking 'Cross Country Skiing Men's 4 x 10 kilometres Relay' only to save in a dataframe
-    reusable_df = reusable_df
+    
     df_men_relay = reusable_df[reusable_df["Event"] == "Cross Country Skiing Men's 4 x 10 kilometres Relay"]
     # grouping by event + region. new column '0', counts medals. 
     # going to rename this one after concat with other mens team event
@@ -130,15 +129,16 @@ def men_team_xcs_plot():
     concat_men_df.Medal = pd.Categorical(concat_men_df.Medal,categories=['Bronze', 'Silver', 'Gold'])
     concat_men_df = concat_men_df.sort_values('Medal')
 
-    fig_team_xcs = px.histogram(
-    concat_men_df,
-    x="region",
-    y="Amount",
-    color="Medal",
-    labels={"Sport": "Sport", "0": "medals", "region": "Country"},
-    barmode="group",
-    title="Men's team cross country skiing medals",
-    text_auto = True,
-    color_discrete_sequence=[px.colors.qualitative.Dark2[6],px.colors.qualitative.Dark2[7],px.colors.qualitative.Dark2[5]]
-    )
-    return fig_team_xcs
+
+    fig10 = px.histogram(
+        concat_men_df,
+        x="region",
+        y="Amount",
+        color="Medal",
+        labels={"Sport": "Sport", "0": "medals", "region": "Country"},
+        barmode="group",
+        title="Men's team cross country skiing medals",
+        text_auto = True,
+        color_discrete_sequence=[px.colors.qualitative.Dark2[6],px.colors.qualitative.Dark2[7],px.colors.qualitative.Dark2[5]]
+        )
+    return fig10

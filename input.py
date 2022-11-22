@@ -60,20 +60,20 @@ print(df_germany)
 # function to return a dataframe needed for xcs plots
 def reusable_dataframe_xcs():
     # reading athlete_events as df1
-    df1 = pd.read_csv("../Data/athlete_events.csv")
+    # df1 = pd.read_csv("../Data/athlete_events.csv")
     #df1.head()
 
     # reading noc_regions as df2, going to merge these
-    df2 = pd.read_csv("../Data/noc_regions.csv")
+    # df2 = pd.read_csv("../Data/noc_regions.csv")
     #df2.head()
     #df1.head(1)
 
     # merging both files into one on NOC
-    df = pd.merge(df1, df2, on="NOC", how="left")
-    df.head(2)
+    # df = pd.merge(df1, df2, on="NOC", how="left")
+    # df.head(2)
 
     # cross country skiing only dataframe
-    xcs_df = df[df["Sport"] == "Cross Country Skiing"]
+    xcs_df = df_merge[df_merge["Sport"] == "Cross Country Skiing"]
     xcs_df.head()
 
 
