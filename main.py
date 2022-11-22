@@ -9,6 +9,7 @@ import plotly.express as px
 from dash.dependencies import Input, Output
 import plotly.graph_objects as go
 import re
+from graph import *
 
 # TODO: Info om använding och projekt etc. länkar, etc.
 # This app analyzes data from the olympic games.
