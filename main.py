@@ -9,7 +9,7 @@ import plotly.express as px
 from dash.dependencies import Input, Output
 import plotly.graph_objects as go
 import re
-from graph import *
+
 
 # TODO: Info om använding och projekt etc. länkar, etc.
 # This app analyzes data from the olympic games.
@@ -75,8 +75,8 @@ def seasonal_pie():
             ),
         ])
 
-# Most sports participated in
-def sport_participation():
+# Femlaes participated in olympics
+def female_participation():
 
 
     df_female = df_germany[["Year", "Sex", "Season"]]
@@ -101,7 +101,30 @@ def sport_participation():
     return fig3
 
 
-# -> Renders top sports participated by country
+# -> Renders females participated by country
+def female_part():
+    return html.Div([
+            dcc.Graph(
+
+
+                id='female-part',
+                figure=female_participation()
+            ),
+        ])
+ # 
+
+
+# football sport
+def sport_participation():
+    df_sp = pd.DataFrame(df_merge.groupby(["Sport","region"])[["Medal"]].value_counts()).reset_index()
+    sport = df_sp[df_sp["Sport"] == "Football"]
+    fig4 = px.bar(sport, x="region",
+    y=0,color ="Medal",text_auto=True,
+    labels={"Sport": "Sport", "0": "Number of medals"}, title= "Countries who won medals on Football")
+    return fig4
+
+
+# sport medals in football
 def sport_part():
     return html.Div([
             dcc.Graph(
@@ -111,8 +134,6 @@ def sport_part():
                 figure=sport_participation()
             ),
         ])
- # 
-
 
 # ----- Divs & dbc.Cards & other componentes ----- #
 
@@ -159,8 +180,9 @@ def div1():
         dbc.Row(
             [
                 dbc.Col(html.Div(seasonal_pie()), md=6),
-                dbc.Col(html.Div(sport_participation()), md=6),
+                dbc.Col(html.Div(female_participation()), md=6),
             ])
+        
       
 
             ], style={'marginRight': 15, 'marginLeft': 15, 'marginBottom': 50, 'marginTop': 25}
@@ -174,6 +196,7 @@ def div2():
             html.H1('This is div2'),
 
             html.Div('Grapically represents women empowerment.'),
+            
             
 
             dcc.Dropdown(
