@@ -126,7 +126,7 @@ def men_team_xcs_plot():
 
     # sorting medals to get a nicer plot
     concat_men_df = concat_men_df.rename({0:'Amount'}, axis=1)
-    concat_men_df.Medal = pd.Categorical(concat_men_df.Medal,categories=['Bronze', 'Silver', 'Gold'])
+    concat_men_df.Medal = pd.Categorical(concat_men_df.Medal,categories=['Gold', 'Silver', 'Bronze'])
     concat_men_df = concat_men_df.sort_values('Medal')
 
 
@@ -142,3 +142,83 @@ def men_team_xcs_plot():
         color_discrete_sequence=[px.colors.qualitative.Dark2[6],px.colors.qualitative.Dark2[7],px.colors.qualitative.Dark2[5]]
         )
     return fig10
+
+def women_team_xcs_plot():
+    
+    reusable_df = df_merge
+    
+    #reusable_df = df_merge(columns=['ID','Name', 'Age', 'Height','Weight']).dropna(subset='Medal')
+    reusable_df.drop_duplicates()
+    # 3x5 k relay
+    df_women_relay = reusable_df[reusable_df["Event"] == "Cross Country Skiing Women's 3 x 5 kilometres Relay"]
+    df_women_relay = df_women_relay.groupby(["Event", "region"])[["Medal"]].value_counts().to_frame().reset_index()
+    df_women_relay.drop_duplicates()
+    # 4x5 relay
+    df_women_4x_relay = reusable_df[reusable_df["Event"] == "Cross Country Skiing Women's 3 x 5 kilometres Relay"]
+    df_women_4x_relay = df_women_4x_relay.groupby(["Event", "region"])[["Medal"]].value_counts().to_frame().reset_index()
+
+    # team sprint
+    df_women_sprint = reusable_df[reusable_df["Event"] == "Cross Country Skiing Women's Team Sprint"]
+    df_women_sprint = df_women_sprint.groupby(["Event", "region"])[["Medal"]].value_counts().to_frame().reset_index()
+
+    # concating dfs into one, to plot it
+    frames = [df_women_relay, df_women_4x_relay, df_women_sprint]
+    concat_women_team = pd.concat(frames)
+    #concat_women_team.drop_duplicates()
+    # sorting medals to get a nicer plot + renaming axis
+    concat_women_team = concat_women_team.rename({0:'Amount'}, axis=1)
+
+    concat_women_team.Medal = pd.Categorical(concat_women_team.Medal,categories=['Gold', 'Silver', 'Bronze'])
+    concat_women_team = concat_women_team.sort_values('Medal')
+
+    # plotting
+    fig11 = px.histogram(
+    concat_women_team,
+    x="region",
+    y="Amount",
+    color="Medal",
+    labels={"Sport": "Sport", "0": "medals", "region": "Country"},
+    barmode="group",
+    title="Women's team cross country skiing medals by country",
+    text_auto = True,
+    color_discrete_sequence=[px.colors.qualitative.Dark2[6],px.colors.qualitative.Dark2[7],px.colors.qualitative.Dark2[5]]
+    )
+    return fig11
+
+def total_individual_xcs_plot():
+
+    reusable_df = df_merge[df_merge["Sport"] == "Cross Country Skiing"]
+
+    # messy way to drop certain events
+    total_individual_medals = reusable_df[reusable_df["Event"] != "Cross Country Skiing Men's Team Sprint"]
+
+    total_individual_medals = total_individual_medals[total_individual_medals["Event"] != "Cross Country Skiing Women's Team Sprint"]
+
+    total_individual_medals = total_individual_medals[total_individual_medals["Event"] != "Cross Country Skiing Women's 4 x 5 kilometres Relay"]
+
+    total_individual_medals = total_individual_medals[total_individual_medals["Event"] != "Cross Country Skiing Women's 3 x 5 kilometres Relay"]
+
+    total_individual_medals = total_individual_medals[total_individual_medals["Event"] != "Cross Country Skiing Men's 4 x 10 kilometres Relay"]
+
+    # grouping the dataframe and counting medals
+    total_individual_medals = total_individual_medals.groupby(["Event", "region"])[["Medal"]].value_counts().to_frame().reset_index()
+
+    # sorting medals to get a nicer plot + renaming axis
+    total_individual_medals = total_individual_medals.rename({0:'Amount'}, axis=1)
+
+    total_individual_medals.Medal = pd.Categorical(total_individual_medals.Medal,categories=['Gold', 'Silver', 'Bronze'])
+    total_individual_medals = total_individual_medals.sort_values('Medal')
+    
+    # plotting
+    fig12 = px.histogram(
+    total_individual_medals,
+    x="region",
+    y="Amount",
+    color="Medal",
+    labels={"Sport": "Sport", "0": "medals", "region": "Country"},
+    barmode="group",
+    title="Total individual medals by country",
+    text_auto = True,
+    color_discrete_sequence=[px.colors.qualitative.Dark2[6],px.colors.qualitative.Dark2[7],px.colors.qualitative.Dark2[5]]
+)
+    return fig12
