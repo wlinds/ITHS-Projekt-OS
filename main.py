@@ -145,6 +145,7 @@ def div1():
       
 
     ], style={'marginRight': 15, 'marginLeft': 15, 'marginBottom': 50, 'marginTop': 25})
+    
 
 
 
@@ -164,14 +165,8 @@ def div2():
         ])
 
 
-            dcc.Graph(
-                id='line',
-                figure=fig2
-            ),  
-        ], className='six columns'),
-    ], className='row'),
     # New Div for all elements in the new 'row' of the page
-    html.Div([
+   
 
 def div3():
     return dbc.Card([
