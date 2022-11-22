@@ -54,6 +54,3 @@ all_region = df_merge['region'].dropna().unique().tolist()
 def get_region(df=df_merge, region=None):
     return df.loc[df['region'] == region]
 
-# # for land statstics sort out the country :germany
-df_germany = df_medals.query("region == 'Germany'")
-print(df_germany)
