@@ -171,20 +171,9 @@ def div1():
 
 def div2():
      return dbc.Card([
-            html.H1('This is div2'),
+            html.H1(),
 
-            html.Div('Grapically represents women empowerment.'),
-            
-            
-
-            dcc.Dropdown(
-                options=[{'label': i, 'value': i} for i in df_germany.columns],
-                value='Sex',
-                id='dropdown2',
-                style={"width": "50%", "offset":1,},
-                clearable=False,
-            ),
-
+            html.Div(),
 
         dbc.Row(
             [
