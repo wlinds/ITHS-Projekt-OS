@@ -12,6 +12,10 @@ import re
 from graph import *
 
 
+from graph import total_individual_xcs_plot
+from graph import women_team_xcs_plot
+from graph import men_team_xcs_plot
+
 # TODO: Info om använding och projekt etc. länkar, etc.
 # This app analyzes data from the olympic games.
 # Run this and visit http://127.0.0.1:8050/ in your web browser.
@@ -68,6 +72,33 @@ def female_part():
                 figure=female_participation()
             ),
         ])
+
+
+
+# Cross country skiing functions. used to plot xcs._____________________________
+# required to plot men_team_xcs_plot
+def xcs_men():
+    return html.Div(
+        [
+            dcc.Graph(id="xcs-men-test", figure=men_team_xcs_plot())
+        ]
+    )
+
+def xcs_women():
+    return html.Div(
+        [
+            dcc.Graph(id="xcs-women", figure=women_team_xcs_plot())
+        ]
+    )
+
+def xcs_individual():
+    return html.Div(
+        [
+            dcc.Graph(id="xcs-individual", figure=total_individual_xcs_plot())
+        ]
+    )
+#________________________________________________________________
+
 
     
 # -> Renders top sports participated by country
@@ -132,6 +163,9 @@ def div1():
 
             ], style={'marginRight': 15, 'marginLeft': 15, 'marginBottom': 50, 'marginTop': 25}
     )
+
+    ])
+
     
 
 
@@ -151,20 +185,26 @@ def div2():
                 style={"width": "50%", "offset":1,},
                 clearable=False,
             ),
-           # dbc.Row(
-            #[
-            #    dbc.Col(html.Div(xcs_women()), md=6),
-            #    dbc.Col(html.Div(xcs_men()), md=6)
 
-           # ]
-       # ),
+
         dbc.Row(
             [
-                #dbc.Col(html.Div(xcs_individual()), md=6)
-                dbc.Col(html.Div(sport_part()), md=6)
+                dbc.Col(html.Div(xcs_women()), md=6),
+                dbc.Col(html.Div(xcs_men()), md=6)
+
+            ]
+        ),
+        dbc.Row(
+            [
+                dbc.Col(html.Div(xcs_individual()), md=6)
+                 dbc.Col(html.Div(sport_part()), md=6)
             ]
         )
         ])
+
+
+         
+       
 
 
     # New Div for all elements in the new 'row' of the page

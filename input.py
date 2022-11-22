@@ -35,6 +35,7 @@ df1 = olympicdata_object.olympic_dataframe("noc_regions")
 # Merge both files with NOC columns
 df_merge = pd.merge(df, df1,  on="NOC",how = "left")
 
+
 # Hashes Name column (pseudo-anonymisation)
 #df_merge["Name"] = hash_column(df_merge)
 
@@ -53,4 +54,23 @@ all_region = df_merge['region'].dropna().unique().tolist()
 # Return any country as df
 def get_region(df=df_merge, region=None):
     return df.loc[df['region'] == region]
+
+
+# # for land statstics sort out the country :germany
+df_germany = df_medals.query("region == 'Germany'")
+print(df_germany)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
