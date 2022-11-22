@@ -1,36 +1,84 @@
 from __future__ import annotations
-from input import df_germany
+from input import *
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
 
 
 
- # graph 1 is for age distribution
-fig1 = px.histogram(df_germany, x='Age', color = 'Sex',  title= "Histogram of ages")
+# graph 1 is for age distribution
+
+
+def age_gender_historgram():
+    fig1 = px.histogram(
+        df_germany, x="Age", color="Sex", title="Participant age histogram"
+    )
+    return fig1
+
+# graph 3 represents top 10 sports germany got medals
+
+
+def medal_graph():  #  graph 3 represents top 10 sports germany got medals
+    df_medals = (
+        pd.DataFrame(
+            df_germany.groupby("Sport")["Medal"].count().sort_values(ascending=False)
+        )
+        .reset_index()
+        .head(10)
+    )
+    fig2 = px.bar(
+        df_medals,
+        x="Sport",
+        y="Medal",
+        color="Sport",text_auto=True,
+        labels={"Sport": "Sport", "value": "Number of medals"},
+        title=f"Top 10 medals achieved in Germany",
+    )
+    fig2.update_xaxes(tickangle=45)
+    return fig2
+
+# graph3 for total number of womens from Germany participated in olympics
+
+
+def female_graph():
+
+    df_female = df_germany[["Year", "Sex", "Season"]]
+    df_female = df_female[(df_female["Sex"] == "F")]
+    # separte data frame created
+    females = (
+        df_female[["Year", "Season"]]
+        .value_counts()
+        .reset_index(name="count")
+        .sort_values(by="Year", ascending=True)
+    )
+
+    fig3 = px.line(
+        females,
+        x="Year",
+        y="count",
+        color="Season",
+        log_x=True,
+        title=" Total number of females participated in Olympics",
+    )
+    fig3.update_xaxes(tickangle=45)
+    return fig3
 
 
 
-df_summer = df_germany.query("Sex == 'F' & Season == 'Summer'")
-df_winter = df_germany.query("Sex == 'F' & Season == 'Winter'")
-
-print(df_summer.head())
-trace1 = go.scatter(x = df_summer["year"], y = df_summer["Total medals"], name = "Summer Games", 
-    marker = dict(color = "Blue"), mode = "marker+lines")
-trace2 = go.scatter(x = df_winter["year"], y = df_winter["Total medals"], name = "Winter Games", 
-    marker = dict(color = "Orange"), mode = "marker+lines")
-data = [trace1, trace2]
-layout = dict(title = "Female Athlete in Germany", xaxis = dict(title = "Year"), yaxis =dict(title = "Number of medals"),
-    hovermode = "closet" )
-
-fig2 = dict(data= data, layout = layout)
 
 
-# graph 2 for total number if womens from Germany participated in olympics
-df_female = df_germany.query("Sex == 'F'")
-# for land statstics sort out the country :germany
-#df_germany = df_medals[df_medals["region"] == "Germany"]
-print(df_germany)
+
+# graph for sport statstics
+
+def football_graph():
+    df_sp = pd.DataFrame(df_merge.groupby(["Sport","region"])[["Medal"]].value_counts()).reset_index()
+    sport = df_sp[df_sp["Sport"] == "Football"]
+    fig = px.bar(sport, x="region",
+    y=0,color ="Medal",text_auto=True,
+    labels={"Sport": "Sport", "0": "Number of medals"}, title= "Countries who won medals on Football")
+
+
+
+
 
 # ------ Land statistics: ----- #
 
@@ -41,8 +89,7 @@ print(df_germany)
 # Histogram
 
 ### # Top 10 in Germany  (Women in sports) # Women empowerment
-#Subtitle # Female participating throughout history (Ger)
-
+# Subtitle # Female participating throughout history (Ger)
 
 
 # ----- Sport statistics: ----- #
@@ -52,8 +99,6 @@ print(df_germany)
 #          -> Number of persons from country represented in sport
 #          ->
 
-# Athletics 
+# Athletics
 
-# Cross country skiing 
-
-
+# Cross country skiing
