@@ -1,7 +1,7 @@
 
 import os
 import pandas as pd
-from input import df_germany 
+from input import * 
 import dash
 from dash import html
 from dash import dcc
@@ -22,8 +22,9 @@ fig1 = px.histogram(df_germany, x='Age', color = 'Sex',  title= "Histogram of ag
 df_female= df_germany[['Year','Sex',"Season"]]
 df_female = df_female[(df_female['Sex'] == 'F')]
 # separte data frame created
-females= df_female[['Year','Season']].value_counts().reset_index(name = 'count')
-fig2 = px.line(females, x = "Year" , y="count", markers=True, color= "Season", title = " Total number of females participated in Olympics")
+females= df_female[['Year','Season']].value_counts().reset_index(name = 'count').sort_values(by ="Year", ascending= True)
+
+fig2 = px.line(females, x = "Year" , y="count", color= "Season", log_x = True, title = " Total number of females participated in Olympics")
 
 
 # graph 3 represents top 10 sports germany got medals
@@ -38,16 +39,12 @@ app.layout = html.Div(children=[
     html.Div([
         html.Div([
             html.H1(children='Land Statstics: GERMANY'),
-
-            html.Div(children='''
-                Dash: Grapically represents Age histogram.
-            '''),
+            
             dcc.Dropdown(
-                options=[{'label': i, 'value': i} for i in df_germany.columns],
+                options=[{'label': "Year", 'value': "Year"},{'label': "Weight", 'value': "Weight"}, 
+                {'label': "Height", 'value': "Height"}, {'label': "Age", 'value': "Age"}, {'label': "Season", 'value': "Season"}],
                 value='Age',
-                id='dropdown1',
-                style={"width": "50%", "offset":1,},
-                clearable=False,
+                id='dropdown1'
             ),
 
             dcc.Graph(
@@ -109,18 +106,14 @@ app.layout = html.Div(children=[
     Input(component_id='dropdown', component_property='value'),
 )
 
-
 def update_hist(feature):
     fig1 = px.histogram(df_germany, x=feature)
     return fig1
 
-def update_line(feature):
-    fig1 = px.histogram(df_germany, x=feature)
-    return fig1
+def update_output(value):
+    return f'You have selected {value}'
 
-def update_hist(feature):
-    fig1 = px.histogram(df_germany, x=feature)
-    return fig1
+
 
 
 if __name__ == '__main__':
