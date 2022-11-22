@@ -85,9 +85,6 @@ def sport_participation():
 def sport_part():
     return html.Div([
             dcc.Graph(
-
-                id='histogram', fig = fig1),
-
                 id='sport-part',
                 figure=sport_participation()
             ),
@@ -142,7 +139,7 @@ def div1():
                 dbc.Col(html.Div(seasonal_pie()), md=6),
                 dbc.Col(html.Div(sport_part()), md=6),
             ]
-      
+        ),
 
     ], style={'marginRight': 15, 'marginLeft': 15, 'marginBottom': 50, 'marginTop': 25})
 
@@ -163,19 +160,8 @@ def div2():
             ),
         ])
 
-
-            dcc.Graph(
-                id='line',
-                figure=fig2
-            ),  
-        ], className='six columns'),
-    ], className='row'),
-    # New Div for all elements in the new 'row' of the page
-    html.Div([
-
 def div3():
     return dbc.Card([
-
         html.H1(children='Hello Dash'),
 
         html.Div(children='''
@@ -196,11 +182,9 @@ def about_box():
     return html.Div(
     dcc.Markdown('''
 ## About
-
 This tool should be used for estimates only. Data integrity not guaranteed. Use at own risk. 
 - This is markdown btw.
 - Kinda neat.
-
 Skämt åsido - I'm tired af and will continue tomorrow. Will push to my branch so you can have a look and decide what we should do.
     '''),
     
