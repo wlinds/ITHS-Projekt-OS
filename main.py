@@ -1,7 +1,7 @@
 
 import os
 import pandas as pd
-from input import * 
+from input import * # import all varibles from input 
 import dash
 from dash import html
 from dash import dcc
@@ -29,7 +29,7 @@ fig2 = px.line(females, x = "Year" , y="count", color= "Season", log_x = True, t
 
 # graph 3 represents top 10 sports germany got medals
 df_medals = pd.DataFrame(df_germany.groupby("Sport")["Medal"].count().sort_values(ascending= False)).reset_index().head(10)
-fig3 = fig = px.bar(df_medals,x="Sport",
+fig3 = fig = px.bar(df_medals,x="Sport",text_auto=True,
     y="Medal",color = "Sport",
     labels={"Sport": "Sport", "value": "Number of medals"}, title= "Top 10 sports in Germany won the most medals")
 
@@ -41,16 +41,15 @@ app.layout = html.Div(children=[
             html.H1(children='Land Statstics: GERMANY'),
             
             dcc.Dropdown(
-                options=[{'label': "Year", 'value': "Year"},{'label': "Weight", 'value': "Weight"}, 
-                {'label': "Height", 'value': "Height"}, {'label': "Age", 'value': "Age"}, {'label': "Season", 'value': "Season"}],
+                options=[{'label': i, 'value': i} for i in df_germany.columns],
                 value='Age',
-                id='dropdown1'
+                id='dropdown2',
+                style={"width": "50%", "offset":1,},
+                clearable=False,
             ),
 
             dcc.Graph(
-                id='histogram',
-                figure=fig1
-            ),
+                id='histogram'),
 
         ], className='six columns'),
         html.Div([
@@ -61,7 +60,7 @@ app.layout = html.Div(children=[
             '''),
             dcc.Dropdown(
                 options=[{'label': i, 'value': i} for i in df_germany.columns],
-                value='Sex',
+                value='Age',
                 id='dropdown2',
                 style={"width": "50%", "offset":1,},
                 clearable=False,
@@ -99,19 +98,18 @@ app.layout = html.Div(children=[
 @app.callback(
     Output(component_id='histogram', component_property='figure'),
     Output(component_id='line', component_property='figure'),
-    Output(component_id='histogram', component_property='figure'),
+    Output(component_id='bar', component_property='figure'),
 
-    Input(component_id='dropdown1', component_property='value'),
+    
     Input(component_id='dropdown2', component_property='value'),
     Input(component_id='dropdown', component_property='value'),
+    Input(component_id='dropdown1', component_property='value'),
 )
 
 def update_hist(feature):
-    fig1 = px.histogram(df_germany, x=feature)
-    return fig1
+    fig = px.histogram(df_germany, x=feature)
+    return fig
 
-def update_output(value):
-    return f'You have selected {value}'
 
 
 
