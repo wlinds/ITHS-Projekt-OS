@@ -146,10 +146,13 @@ def men_team_xcs_plot():
 def women_team_xcs_plot():
     
     reusable_df = df_merge
+    
+    #reusable_df = df_merge(columns=['ID','Name', 'Age', 'Height','Weight']).dropna(subset='Medal')
+    reusable_df.drop_duplicates()
     # 3x5 k relay
     df_women_relay = reusable_df[reusable_df["Event"] == "Cross Country Skiing Women's 3 x 5 kilometres Relay"]
     df_women_relay = df_women_relay.groupby(["Event", "region"])[["Medal"]].value_counts().to_frame().reset_index()
-
+    df_women_relay.drop_duplicates()
     # 4x5 relay
     df_women_4x_relay = reusable_df[reusable_df["Event"] == "Cross Country Skiing Women's 3 x 5 kilometres Relay"]
     df_women_4x_relay = df_women_4x_relay.groupby(["Event", "region"])[["Medal"]].value_counts().to_frame().reset_index()
@@ -161,7 +164,7 @@ def women_team_xcs_plot():
     # concating dfs into one, to plot it
     frames = [df_women_relay, df_women_4x_relay, df_women_sprint]
     concat_women_team = pd.concat(frames)
-
+    #concat_women_team.drop_duplicates()
     # sorting medals to get a nicer plot + renaming axis
     concat_women_team = concat_women_team.rename({0:'Amount'}, axis=1)
 
