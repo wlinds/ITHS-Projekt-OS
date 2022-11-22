@@ -1,4 +1,49 @@
+
 body {background-color: #FAFAFA;
     font-family: Helvetica, Sans-Serif;
     color: #000000;
 }
+
+h1 {
+    font-size: 16px;
+  }
+
+.olympic-header {
+    height: 30px;
+    line-height: 30px;
+    border-bottom: thin lightgrey solid;
+    background-color: #f2f2f2fb;
+    width: 100%;
+    position: fixed;
+    z-index: 999;
+    
+    }
+
+.olympic-act1 {
+    height: 30px;
+    background-color: #e9eaf0;
+    width: 100%;
+    text-align: center;
+    font-weight: 600;
+    padding-top: 7%;
+    padding-bottom: 12%;
+  }
+
+.region-search-box { 
+    height: 10px;
+    background-color: #e9eaf0;
+    width: 100%;
+    text-align: center;
+    font-weight: 600;
+    padding-top: 1%;
+    padding-bottom: 8%;
+  }
+
+  .olympic-act2 {
+    height: 10px;
+    background-color: #dd0000;
+    width: 100%;
+    text-align: center;
+    padding-top: 7%;
+    padding-bottom: 12%;
+  }
