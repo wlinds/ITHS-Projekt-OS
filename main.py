@@ -86,7 +86,6 @@ def sport_part():
     return html.Div([
             dcc.Graph(
 
-                id='histogram', fig = fig1),
 
                 id='sport-part',
                 figure=sport_participation()
@@ -129,8 +128,7 @@ def search_country(css_class=None):
 
 # First box - contains country specific graphs
 def div1():
-    return html.Div(
-    [
+    return html.Div([
         dbc.Row(
             [
                 dbc.Col(html.Div(dash_plot1()), md=6),
@@ -141,10 +139,11 @@ def div1():
             [
                 dbc.Col(html.Div(seasonal_pie()), md=6),
                 dbc.Col(html.Div(sport_part()), md=6),
-            ]
+            ])
       
 
-    ], style={'marginRight': 15, 'marginLeft': 15, 'marginBottom': 50, 'marginTop': 25})
+            ], style={'marginRight': 15, 'marginLeft': 15, 'marginBottom': 50, 'marginTop': 25}
+    )
     
 
 
