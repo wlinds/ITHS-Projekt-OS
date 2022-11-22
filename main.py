@@ -161,10 +161,9 @@ def div1():
                 dbc.Col(html.Div(female_part()), md=6),
             ])
 
-            ], style={'marginRight': 15, 'marginLeft': 15, 'marginBottom': 50, 'marginTop': 25}
+            ], style={'marginRight': 15, 'marginLeft': 15, 'marginBottom': 50, 'marginTop': 25},
     )
 
-    ])
 
     
 
@@ -196,7 +195,7 @@ def div2():
         ),
         dbc.Row(
             [
-                dbc.Col(html.Div(xcs_individual()), md=6)
+                dbc.Col(html.Div(xcs_individual()), md=6),
                  dbc.Col(html.Div(sport_part()), md=6)
             ]
         )
