@@ -76,7 +76,7 @@ def seasonal_pie():
         ])
 
 # Most sports participated in
-def sport_participation():
+def female_participation():
 
 
     df_female = df_germany[["Year", "Sex", "Season"]]
@@ -178,13 +178,10 @@ def div1():
         dbc.Row(
             [
                 dbc.Col(html.Div(seasonal_pie()), md=6),
-                dbc.Col(html.Div(sport_participation()), md=6),
+                dbc.Col(html.Div(female_participation()), md=6),
             ])
       
 
-                dbc.Col(html.Div(sport_part()), md=6),
-            ]
-        ),
 
             ], style={'marginRight': 15, 'marginLeft': 15, 'marginBottom': 50, 'marginTop': 25}
     )
