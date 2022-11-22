@@ -2,8 +2,7 @@ from __future__ import annotations
 import pandas as pd
 import os
 
-directory_path = os.path.dirname(__file__)
-path = os.path.join(directory_path, "Data")
+
 
 # create a class for path
 class OlympicData:
@@ -22,6 +21,9 @@ class OlympicData:
         olympic = pd.read_csv(path, index_col = None)
             
         return olympic
+        
+directory_path = os.path.dirname(__file__)
+path = os.path.join(directory_path, "Data")
 
 # Instantiate new object with data
 olympicdata_object = OlympicData(path)
@@ -51,6 +53,7 @@ all_region = df_merge['region'].dropna().unique().tolist()
 # Return any country as df
 def get_region(df=df_merge, region=None):
     return df.loc[df['region'] == region]
+
 
 # # for land statstics sort out the country :germany
 df_germany = df_medals.query("region == 'Germany'")
@@ -84,3 +87,4 @@ def reusable_dataframe_xcs():
     # going to use 'reusable_df' as a basline dataframe
     reusable_df = dropped_df.drop_duplicates()
     return reusable_df
+

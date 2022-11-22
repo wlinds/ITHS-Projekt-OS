@@ -9,10 +9,14 @@ import plotly.express as px
 from dash.dependencies import Input, Output
 import plotly.graph_objects as go
 import re
+
 from graph import men_team_xcs_plot
 
 # import xcs_graphs as xcs_men_team
 # from xcs_graphs import xcs_men_plot
+
+from graph import *
+
 
 # TODO: Info om använding och projekt etc. länkar, etc.
 # This app analyzes data from the olympic games.
@@ -47,6 +51,7 @@ def dash_plot1():
 
 
 # Country medal accumulation
+
 def medal_graph(
     country="Germany",
 ):  #  graph 3 represents top 10 sports germany got medals
@@ -66,6 +71,13 @@ def medal_graph(
         title=f"Top 10 medals achieved in {country}",
     )
     fig2.update_xaxes(tickangle=45)
+
+def medal_graph(country="Germany"):#  graph 3 represents top 10 sports germany got medals
+    df_medals = pd.DataFrame(df_germany.groupby("Sport")["Medal"].count().sort_values(ascending= False)).reset_index().head(10)
+    fig2 = px.bar(df_medals,x="Sport",
+    y="Medal",color = "Sport",text_auto=True,
+    labels={"Sport": "Sport", "value": "Number of medals"}, title= f"Top 10 medals achieved in {country}")
+    fig2.update_xaxes(tickangle=45) 
     return fig2
 
 
@@ -104,6 +116,7 @@ def seasonal_pie():
 
 
 # Most sports participated in
+
 def sport_participation():
     fig = px.scatter(
         df_germany,
@@ -123,6 +136,62 @@ def sport_part():
             dcc.Graph(id="sport-part", figure=sport_participation()),
         ]
     )
+
+def female_participation():
+
+
+    df_female = df_germany[["Year", "Sex", "Season"]]
+    df_female = df_female[(df_female["Sex"] == "F")]
+    # separte data frame created
+    females = (
+        df_female[["Year", "Season"]]
+        .value_counts()
+        .reset_index(name="count")
+        .sort_values(by="Year", ascending=True)
+    )
+
+    fig3 = px.line(
+        females,
+        x="Year",
+        y="count",
+        color="Season",
+        log_x=True,
+        title=" Total number of females participated in Olympics",
+    )
+    fig3.update_xaxes(tickangle=45)
+    return fig3
+
+# -> Renders females participated by country
+def female_part():
+    return html.Div([
+            dcc.Graph(
+
+
+                id='female-part',
+                figure=female_participation()
+            ),
+        ])
+
+# football sport
+def sport_participation():
+    df_sp = pd.DataFrame(df_merge.groupby(["Sport","region"])[["Medal"]].value_counts()).reset_index()
+    sport = df_sp[df_sp["Sport"] == "Football"]
+    fig4 = px.bar(sport, x="region",
+    y=0,color ="Medal",text_auto=True,
+    labels={"Sport": "Sport", "0": "Number of medals"}, title= "Countries who won medals on Football")
+    return fig4
+    
+# -> Renders top sports participated by country
+def sport_part():
+    return html.Div([
+            dcc.Graph(
+
+
+                id='sport-part',
+                figure=sport_participation()
+            ),
+        ])
+ # 
 
 def xcs_men_test():
     return html.Div(
@@ -175,6 +244,7 @@ def search_country(css_class=None):
 
 # First box - contains country specific graphs
 def div1():
+
     return html.Div(
         [
             dbc.Row(
@@ -207,6 +277,35 @@ def div2():
         [
             html.H1("This is div2"),
             html.Div("Grapically represents women empowerment."),
+
+    return html.Div([
+        dbc.Row(
+            [
+                dbc.Col(html.Div(dash_plot1()), md=6),
+                dbc.Col(html.Div(top_medal()), md=6),
+            ]
+        ),
+        dbc.Row(
+            [
+                dbc.Col(html.Div(seasonal_pie()), md=6),
+                dbc.Col(html.Div(female_participation()), md=6),
+            ])
+      
+
+
+            ], style={'marginRight': 15, 'marginLeft': 15, 'marginBottom': 50, 'marginTop': 25}
+    )
+    
+
+
+
+def div2():
+     return dbc.Card([
+            html.H1('This is div2'),
+
+            html.Div('Grapically represents women empowerment.'),
+            
+
             dcc.Dropdown(
                 options=[{"label": i, "value": i} for i in df_germany.columns],
                 value="Sex",
@@ -219,6 +318,16 @@ def div2():
             ),
         ]
     )
+
+
+
+
+
+    # New Div for all elements in the new 'row' of the page
+   
+def div3():
+    return dbc.Card([
+        html.H1(children='Hello Dash'),
 
 
 def div3():
@@ -252,6 +361,7 @@ def about_box():
 This tool should be used for estimates only. Data integrity not guaranteed. Use at own risk. 
 - This is markdown btw.
 - Kinda neat.
+
 Skämt åsido - I'm tired af and will continue tomorrow. Will push to my branch so you can have a look and decide what we should do.
     """
         ),
@@ -262,6 +372,11 @@ Skämt åsido - I'm tired af and will continue tomorrow. Will push to my branch 
             "marginTop": 25,
         },
     )
+
+ Skämt åsido - I'm tired af and will continue tomorrow. Will push to my branch so you can have a look and decide what we should do.
+    '''),
+    
+    style={'marginRight': 15, 'marginLeft': 15, 'marginBottom': 50, 'marginTop': 25})
 
 
 def footer(value="Default value: Hellö."):
