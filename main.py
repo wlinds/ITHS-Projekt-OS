@@ -185,7 +185,7 @@ def about_box():
 This tool should be used for estimates only. Data integrity not guaranteed. Use at own risk. 
 - This is markdown btw.
 - Kinda neat.
-Skämt åsido - I'm tired af and will continue tomorrow. Will push to my branch so you can have a look and decide what we should do.
+ Skämt åsido - I'm tired af and will continue tomorrow. Will push to my branch so you can have a look and decide what we should do.
     '''),
     
     style={'marginRight': 15, 'marginLeft': 15, 'marginBottom': 50, 'marginTop': 25})
