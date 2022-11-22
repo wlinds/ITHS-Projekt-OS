@@ -100,7 +100,6 @@ def female_participation():
     fig3.update_xaxes(tickangle=45)
     return fig3
 
-
 # -> Renders females participated by country
 def female_part():
     return html.Div([
@@ -111,8 +110,6 @@ def female_part():
                 figure=female_participation()
             ),
         ])
- # 
-
 
 # football sport
 def sport_participation():
@@ -122,9 +119,8 @@ def sport_participation():
     y=0,color ="Medal",text_auto=True,
     labels={"Sport": "Sport", "0": "Number of medals"}, title= "Countries who won medals on Football")
     return fig4
-
-
-# sport medals in football
+    
+# -> Renders top sports participated by country
 def sport_part():
     return html.Div([
             dcc.Graph(
@@ -185,6 +181,10 @@ def div1():
         
       
 
+                dbc.Col(html.Div(sport_part()), md=6),
+            ]
+        ),
+
             ], style={'marginRight': 15, 'marginLeft': 15, 'marginBottom': 50, 'marginTop': 25}
     )
     
@@ -209,12 +209,11 @@ def div2():
         ])
 
 
+
     # New Div for all elements in the new 'row' of the page
    
-
 def div3():
     return dbc.Card([
-
         html.H1(children='Hello Dash'),
 
         html.Div(children='''
@@ -235,12 +234,10 @@ def about_box():
     return html.Div(
     dcc.Markdown('''
 ## About
-
 This tool should be used for estimates only. Data integrity not guaranteed. Use at own risk. 
 - This is markdown btw.
 - Kinda neat.
-
-Skämt åsido - I'm tired af and will continue tomorrow. Will push to my branch so you can have a look and decide what we should do.
+ Skämt åsido - I'm tired af and will continue tomorrow. Will push to my branch so you can have a look and decide what we should do.
     '''),
     
     style={'marginRight': 15, 'marginLeft': 15, 'marginBottom': 50, 'marginTop': 25})
