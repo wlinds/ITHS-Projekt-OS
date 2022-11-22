@@ -1,12 +1,13 @@
 
 import os
 import pandas as pd
-from input import df_germany 
+from input import * 
 import dash
 from dash import html
 from dash import dcc
 import dash_bootstrap_components as dbc
 import plotly.express as px
+import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 
 
@@ -18,9 +19,19 @@ fig1 = px.histogram(df_germany, x='Age', color = 'Sex',  title= "Histogram of ag
 
 
 # graph 2 for total number if womens from Germany participated in olympics
-df_female = df_germany.query("Sex == 'F'")
-fig2  = px.line(df_female, x='Year', y='Total medals', color='Season', markers=True, title = " Total number  medals got by females participated in Olympics")
+df_female= df_germany[['Year','Sex',"Season"]]
+df_female = df_female[(df_female['Sex'] == 'F')]
+# separte data frame created
+females= df_female[['Year','Season']].value_counts().reset_index(name = 'count').sort_values(by ="Year", ascending= True)
 
+fig2 = px.line(females, x = "Year" , y="count", color= "Season", log_x = True, title = " Total number of females participated in Olympics")
+
+
+# graph 3 represents top 10 sports germany got medals
+df_medals = pd.DataFrame(df_germany.groupby("Sport")["Medal"].count().sort_values(ascending= False)).reset_index().head(10)
+fig3 = fig = px.bar(df_medals,x="Sport",
+    y="Medal",color = "Sport",
+    labels={"Sport": "Sport", "value": "Number of medals"}, title= "Top 10 sports in Germany won the most medals")
 
 # set up layout
 app.layout = html.Div(children=[
@@ -28,16 +39,12 @@ app.layout = html.Div(children=[
     html.Div([
         html.Div([
             html.H1(children='Land Statstics: GERMANY'),
-
-            html.Div(children='''
-                Dash: Grapically represents Age histogram.
-            '''),
+            
             dcc.Dropdown(
-                options=[{'label': i, 'value': i} for i in df_germany.columns],
+                options=[{'label': "Year", 'value': "Year"},{'label': "Weight", 'value': "Weight"}, 
+                {'label': "Height", 'value': "Height"}, {'label': "Age", 'value': "Age"}, {'label': "Season", 'value': "Season"}],
                 value='Age',
-                id='dropdown1',
-                style={"width": "50%", "offset":1,},
-                clearable=False,
+                id='dropdown1'
             ),
 
             dcc.Graph(
@@ -61,7 +68,7 @@ app.layout = html.Div(children=[
             ),
 
             dcc.Graph(
-                id='line',
+                id='scatter',
                 figure=fig2
             ),  
         ], className='six columns'),
@@ -82,8 +89,8 @@ app.layout = html.Div(children=[
             ),
 
         dcc.Graph(
-            id='graph3',
-            figure=fig1
+            id='bar',
+            figure=fig3
         ),  
     ], className='row'),
 ])
@@ -99,18 +106,14 @@ app.layout = html.Div(children=[
     Input(component_id='dropdown', component_property='value'),
 )
 
-
 def update_hist(feature):
     fig1 = px.histogram(df_germany, x=feature)
     return fig1
 
-def update_line(feature):
-    fig1 = px.histogram(df_germany, x=feature)
-    return fig1
+def update_output(value):
+    return f'You have selected {value}'
 
-def update_hist(feature):
-    fig1 = px.histogram(df_germany, x=feature)
-    return fig1
+
 
 
 if __name__ == '__main__':
