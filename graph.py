@@ -111,7 +111,7 @@ def men_team_xcs_plot():
     reusable_dataframe_xcs()
 
     # taking 'Cross Country Skiing Men's 4 x 10 kilometres Relay' only to save in a dataframe
-    df = reusable_df
+    reusable_df = reusable_df
     df_men_relay = reusable_df[reusable_df["Event"] == "Cross Country Skiing Men's 4 x 10 kilometres Relay"]
     # grouping by event + region. new column '0', counts medals. 
     # going to rename this one after concat with other mens team event
@@ -130,7 +130,7 @@ def men_team_xcs_plot():
     concat_men_df.Medal = pd.Categorical(concat_men_df.Medal,categories=['Bronze', 'Silver', 'Gold'])
     concat_men_df = concat_men_df.sort_values('Medal')
 
-    fig_xcs = px.histogram(
+    fig_team_xcs = px.histogram(
     concat_men_df,
     x="region",
     y="Amount",
@@ -141,4 +141,4 @@ def men_team_xcs_plot():
     text_auto = True,
     color_discrete_sequence=[px.colors.qualitative.Dark2[6],px.colors.qualitative.Dark2[7],px.colors.qualitative.Dark2[5]]
     )
-    return fig_xcs
+    return fig_team_xcs
