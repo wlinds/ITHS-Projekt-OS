@@ -103,3 +103,42 @@ def football_graph():
 # Athletics
 
 # Cross country skiing
+# Probably messy atm, just want to display it on the dashboard
+
+
+# function to get a reusable dataframe, needed for cross country skiing graphs
+def men_team_xcs_plot():
+    reusable_dataframe_xcs()
+
+    # taking 'Cross Country Skiing Men's 4 x 10 kilometres Relay' only to save in a dataframe
+    df = reusable_df
+    df_men_relay = reusable_df[reusable_df["Event"] == "Cross Country Skiing Men's 4 x 10 kilometres Relay"]
+    # grouping by event + region. new column '0', counts medals. 
+    # going to rename this one after concat with other mens team event
+    df_men_relay = df_men_relay.groupby(["Event", "region"])[["Medal"]].value_counts().to_frame().reset_index()
+    
+    # same as above but for xcs men's team sprint
+    df_men_sprint = reusable_df[reusable_df["Event"] == "Cross Country Skiing Men's Team Sprint"]
+    df_men_sprint = df_men_sprint.groupby(["Event", "region"])[["Medal"]].value_counts().to_frame().reset_index()
+
+    # concating df_men_relay and df_men_sprint
+    frames = [df_men_sprint, df_men_relay]
+    concat_men_df = pd.concat(frames)
+
+    # sorting medals to get a nicer plot
+    concat_men_df = concat_men_df.rename({0:'Amount'}, axis=1)
+    concat_men_df.Medal = pd.Categorical(concat_men_df.Medal,categories=['Bronze', 'Silver', 'Gold'])
+    concat_men_df = concat_men_df.sort_values('Medal')
+
+    fig_xcs = px.histogram(
+    concat_men_df,
+    x="region",
+    y="Amount",
+    color="Medal",
+    labels={"Sport": "Sport", "0": "medals", "region": "Country"},
+    barmode="group",
+    title="Men's team cross country skiing medals",
+    text_auto = True,
+    color_discrete_sequence=[px.colors.qualitative.Dark2[6],px.colors.qualitative.Dark2[7],px.colors.qualitative.Dark2[5]]
+    )
+    return fig_xcs
