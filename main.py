@@ -177,12 +177,12 @@ def div1():
     
 
 
-
+ # contains sports graphs
 def div2():
      return dbc.Card([
-            html.H1('Sport statstics'),
+            html.H1(),
 
-            html.Div('Grapically represents sport statstics of every country.'),
+            html.Div(),
 
 
         dbc.Row(
@@ -197,8 +197,7 @@ def div2():
                 dbc.Col(html.Div(xcs_individual()), md=6),
                  dbc.Col(html.Div(sport_part()), md=6)
             ]
-        ),
-
+        )
         ])
 
 
