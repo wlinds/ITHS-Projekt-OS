@@ -126,7 +126,7 @@ def men_team_xcs_plot():
 
     # sorting medals to get a nicer plot
     concat_men_df = concat_men_df.rename({0:'Amount'}, axis=1)
-    concat_men_df.Medal = pd.Categorical(concat_men_df.Medal,categories=['Gold', 'Silver', 'Bronze'])
+    concat_men_df.Medal = pd.Categorical(concat_men_df.Medal,categories=['Bronze', 'Silver', 'Gold'])
     concat_men_df = concat_men_df.sort_values('Medal')
 
 
@@ -168,7 +168,7 @@ def women_team_xcs_plot():
     # sorting medals to get a nicer plot + renaming axis
     concat_women_team = concat_women_team.rename({0:'Amount'}, axis=1)
 
-    concat_women_team.Medal = pd.Categorical(concat_women_team.Medal,categories=['Gold', 'Silver', 'Bronze'])
+    concat_women_team.Medal = pd.Categorical(concat_women_team.Medal,categories=['Bronze', 'Silver', 'Gold'])
     concat_women_team = concat_women_team.sort_values('Medal')
 
     # plotting
@@ -206,7 +206,7 @@ def total_individual_xcs_plot():
     # sorting medals to get a nicer plot + renaming axis
     total_individual_medals = total_individual_medals.rename({0:'Amount'}, axis=1)
 
-    total_individual_medals.Medal = pd.Categorical(total_individual_medals.Medal,categories=['Gold', 'Silver', 'Bronze'])
+    total_individual_medals.Medal = pd.Categorical(total_individual_medals.Medal,categories=['Bronze', 'Silver', 'Gold'])
     total_individual_medals = total_individual_medals.sort_values('Medal')
     
     # plotting
