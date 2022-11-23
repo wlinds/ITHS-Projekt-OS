@@ -169,29 +169,21 @@ def div1():
                 dbc.Col(html.Div(female_part()), md=6),
             ])
 
-            ], style={'marginRight': 15, 'marginLeft': 15, 'marginBottom': 50, 'marginTop': 25},
+            ], style={'marginRight': 15, 'marginLeft': 15, 'marginBottom': 50, 'marginTop': 25}
     )
 
-<<<<<<< HEAD
-=======
 
->>>>>>> b0c57b443838d8d7209eb15f6914b294f1796049
 
     
 
 
-
+ # contains sports graphs
 def div2():
      return dbc.Card([
-<<<<<<< HEAD
             html.H1(),
-=======
-            html.H1('Sport statstics'),
-
-            html.Div('Grapically represents sport statstics of every country.'),
->>>>>>> b0c57b443838d8d7209eb15f6914b294f1796049
 
             html.Div(),
+
 
         dbc.Row(
             [
@@ -205,8 +197,7 @@ def div2():
                 dbc.Col(html.Div(xcs_individual()), md=6),
                  dbc.Col(html.Div(sport_part()), md=6)
             ]
-        ),
-
+        )
         ])
 
 
