@@ -13,6 +13,22 @@ def age_gender_historgram():
     return fig1
 
 
+# Germany XCS medal distribution
+def germany_xcs():
+    df_germany_2 = df_germany[df_germany["Sport"] == "Cross Country Skiing"]
+    fig13 = px.bar(
+    df_germany_2,
+    x="Year",
+    y="Year",
+    color="Medal",
+    labels={"Sport": "Sport", "0": "medals", "region": "Country"},
+    barmode="group",
+    title="Total medals, Germany cross country skiing",
+    #text_auto = True,
+    color_discrete_sequence=[px.colors.qualitative.Dark2[7],px.colors.qualitative.Dark2[5],px.colors.qualitative.Dark2[6]]
+)
+    return fig13
+
 # Country medal accumulation
 
 
