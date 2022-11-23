@@ -24,6 +24,8 @@ from graph import germany_xcs
 # initialize app
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.UNITED]) # bootstrap theme
 
+
+server = app.server
 # ----- Figure functions followed by return function ----- #
 
 def no_bg(fig: px.Figure) -> px.Figure:
