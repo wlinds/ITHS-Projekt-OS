@@ -90,6 +90,7 @@ def sport_participation():
         color="Medal",
         text_auto=True,
         labels={"Sport": "Sport", "0": "Number of medals"},
+        color_discrete_sequence=[px.colors.qualitative.Dark2[6],px.colors.qualitative.Dark2[7],px.colors.qualitative.Dark2[5]],
         title="Countries who won medals on Football",
     )
     return fig
