@@ -15,6 +15,7 @@ from graph import *
 from graph import total_individual_xcs_plot
 from graph import women_team_xcs_plot
 from graph import men_team_xcs_plot
+from graph import germany_xcs
 
 # TODO: Info om använding och projekt etc. länkar, etc.
 # This app analyzes data from the olympic games.
@@ -97,6 +98,13 @@ def xcs_individual():
             dcc.Graph(id="xcs-individual", figure=total_individual_xcs_plot())
         ]
     )
+
+def xcs_germany_plot():
+    return html.Div(
+        [
+            dcc.Graph(id="xcs-germany-plot", figure=germany_xcs())
+        ]
+    )
 #________________________________________________________________
 
 
@@ -164,6 +172,10 @@ def div1():
             ], style={'marginRight': 15, 'marginLeft': 15, 'marginBottom': 50, 'marginTop': 25},
     )
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b0c57b443838d8d7209eb15f6914b294f1796049
 
     
 
@@ -171,7 +183,13 @@ def div1():
 
 def div2():
      return dbc.Card([
+<<<<<<< HEAD
             html.H1(),
+=======
+            html.H1('Sport statstics'),
+
+            html.Div('Grapically represents sport statstics of every country.'),
+>>>>>>> b0c57b443838d8d7209eb15f6914b294f1796049
 
             html.Div(),
 
@@ -187,7 +205,8 @@ def div2():
                 dbc.Col(html.Div(xcs_individual()), md=6),
                  dbc.Col(html.Div(sport_part()), md=6)
             ]
-        )
+        ),
+
         ])
 
 
@@ -200,6 +219,7 @@ def div2():
 def div3():
     return dbc.Card([
         html.H1(children='Hello Dash'),
+        
 
         html.Div(children='''
             Dash: Top medal analysis.
@@ -211,6 +231,11 @@ def div3():
                 style={"width": "50%", "offset":1,},
                 clearable=False,
             ),
+                    dbc.Row(
+            [
+                dbc.Col(html.Div(xcs_germany_plot()), md=10)
+            ]
+        )
     ])
 
 
@@ -220,9 +245,8 @@ def about_box():
     dcc.Markdown('''
 ## About
 This tool should be used for estimates only. Data integrity not guaranteed. Use at own risk. 
-- This is markdown btw.
-- Kinda neat.
- Skämt åsido - I'm tired af and will continue tomorrow. Will push to my branch so you can have a look and decide what we should do.
+- Placeholder text.
+
     '''),
     
     style={'marginRight': 15, 'marginLeft': 15, 'marginBottom': 50, 'marginTop': 25})
@@ -305,7 +329,7 @@ if __name__ == '__main__':
 
         # Info about all countries
         info_box((("All countries " + "\U0001F30E")),"Sport specific", "olympic-act1"),
-        div2(),
+        div2(),div3(),
 
         # About us and the project, idk?
         about_box(),
