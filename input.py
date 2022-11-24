@@ -58,7 +58,6 @@ def get_region(df=df_merge, region=None):
 
 # # for land statstics sort out the country :germany
 df_germany = df_medals.query("region == 'Germany'")
-print(df_germany)
 
 
 
