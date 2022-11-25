@@ -31,7 +31,7 @@ def germany_xcs():
 
 # Country medal accumulation
 
-
+# top 10 medals by sports in germany
 def medal_graph():  #  graph 2 represents top 10 sports germany got medals
     df_medals = (
         pd.DataFrame(
