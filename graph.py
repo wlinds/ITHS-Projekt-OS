@@ -5,17 +5,31 @@ import plotly.express as px
 from dash import html, dcc
 import dash_bootstrap_components as dbc
 
-
-# graph 1 is for age distribution
-
-
+# Country participant age histogram
 def age_gender_historgram():
     fig1 = px.histogram(
         df_germany, x="Age", color="Sex", title="Participant age histogram"
     )
     return fig1
 
-# graph 2 represents top 10 sports germany got medals
+
+# Germany XCS medal distribution
+def germany_xcs():
+    df_germany_2 = df_germany[df_germany["Sport"] == "Cross Country Skiing"]
+    fig13 = px.bar(
+    df_germany_2,
+    x="Year",
+    y="Year",
+    color="Medal",
+    labels={"Sport": "Sport", "0": "medals", "region": "Country"},
+    barmode="group",
+    title="Total medals, Germany cross country skiing",
+    #text_auto = True,
+    color_discrete_sequence=[px.colors.qualitative.Dark2[7],px.colors.qualitative.Dark2[5],px.colors.qualitative.Dark2[6]]
+)
+    return fig13
+
+# Country medal accumulation
 
 
 def medal_graph():  #  graph 2 represents top 10 sports germany got medals
@@ -30,17 +44,30 @@ def medal_graph():  #  graph 2 represents top 10 sports germany got medals
         df_medals,
         x="Sport",
         y="Medal",
-        color="Sport",text_auto=True,
+        color="Sport",
+        text_auto=True,
         labels={"Sport": "Sport", "value": "Number of medals"},
         title=f"Top 10 medals achieved in Germany",
     )
     fig2.update_xaxes(tickangle=45)
     return fig2
 
-# graph3 for total number of womens from Germany participated in olympics
+
+# Pie chart winter vs summer participation
+def season_participation():
+    seasons = df_germany["Season"].value_counts()
+    return px.pie(
+        df_germany,
+        values=seasons,
+        names=seasons.index[
+            ::-1
+        ],  # Reverse just for default color, change this if color scheme applied
+        title="Winter & Summer Participation Ratio",
+    )
 
 
-def female_graph():
+## Femlaes participated in olympics
+def female_participation():
 
     df_female = df_germany[["Year", "Sex", "Season"]]
     df_female = df_female[(df_female["Sex"] == "F")]
@@ -64,22 +91,25 @@ def female_graph():
     return fig3
 
 
-
-
-
-
 # graph for sport statstics
 
-def football_graph():
-    df_sp = pd.DataFrame(df_merge.groupby(["Sport","region"])[["Medal"]].value_counts()).reset_index()
+
+def sport_participation():
+    df_sp = pd.DataFrame(
+        df_merge.groupby(["Sport", "region"])[["Medal"]].value_counts()
+    ).reset_index()
     sport = df_sp[df_sp["Sport"] == "Football"]
-    fig = px.bar(sport, x="region",
-    y=0,color ="Medal",text_auto=True,
-    labels={"Sport": "Sport", "0": "Number of medals"}, title= "Countries who won medals on Football")
+    fig = px.bar(
+        sport,
+        x="region",
+        y=0,
+        color="Medal",
+        text_auto=True,
+        labels={"Sport": "Sport", "0": "Number of medals"},
+        color_discrete_sequence=[px.colors.qualitative.Dark2[5],px.colors.qualitative.Dark2[7],px.colors.qualitative.Dark2[6]],
+        title="Countries who won medals on Football",
+    )
     return fig
-
-
-
 
 
 # ------ Land statistics: ----- #

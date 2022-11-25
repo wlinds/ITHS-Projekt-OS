@@ -10,9 +10,13 @@ from dash.dependencies import Input, Output
 import plotly.graph_objects as go
 import re
 from graph import *
+
+
 from graph import total_individual_xcs_plot
 from graph import women_team_xcs_plot
 from graph import men_team_xcs_plot
+from graph import germany_xcs
+
 # TODO: Info om använding och projekt etc. länkar, etc.
 # This app analyzes data from the olympic games.
 # Run this and visit http://127.0.0.1:8050/ in your web browser.
@@ -20,20 +24,15 @@ from graph import men_team_xcs_plot
 # initialize app
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.UNITED]) # bootstrap theme
 
+
+server = app.server
 # ----- Figure functions followed by return function ----- #
 
 def no_bg(fig: px.Figure) -> px.Figure:
     "Removes backfround from fig"
     return fig.update_layout(plot_bgcolor = 'rgba(0, 0, 0, 0)')
 
-# Country participant age histogram
-def age_gender_historgram():
-    fig1 = px.histogram(
-        df_germany,
-        x='Age',
-        color = 'Sex',
-        title= "Participant age histogram")
-    return fig1
+
 
 # -> Renders age_gender_histogram in layout
 def dash_plot1():
@@ -44,14 +43,7 @@ def dash_plot1():
             ),
         ])
 
-# Country medal accumulation
-def medal_graph(country="Germany"):#  graph 3 represents top 10 sports germany got medals
-    df_medals = pd.DataFrame(df_germany.groupby("Sport")["Medal"].count().sort_values(ascending= False)).reset_index().head(10)
-    fig2 = px.bar(df_medals,x="Sport",
-    y="Medal",color = "Sport",text_auto=True,
-    labels={"Sport": "Sport", "value": "Number of medals"}, title= f"Top 10 medals achieved in {country}")
-    fig2.update_xaxes(tickangle=45) 
-    return fig2
+
 
 # -> Renders medal_graph in layout
 def top_medal():
@@ -61,12 +53,7 @@ def top_medal():
             figure=medal_graph(),)
             ])
 
-# Pie chart winter vs summer participation
-def season_participation():
-    seasons = df_germany['Season'].value_counts()
-    return px.pie(df_germany, values=seasons,
-                names=seasons.index[::-1], # Reverse just for default color, change this if color scheme applied
-                title="Winter & Summer Participation Ratio")
+
 
 # -> Renders season_participation in layout
 def seasonal_pie():
@@ -77,30 +64,6 @@ def seasonal_pie():
             ),
         ])
 
-# Most sports participated in
-def sport_participation():
-
-
-    df_female = df_germany[["Year", "Sex", "Season"]]
-    df_female = df_female[(df_female["Sex"] == "F")]
-    # separte data frame created
-    females = (
-        df_female[["Year", "Season"]]
-        .value_counts()
-        .reset_index(name="count")
-        .sort_values(by="Year", ascending=True)
-    )
-
-    fig3 = px.line(
-        females,
-        x="Year",
-        y="count",
-        color="Season",
-        log_x=True,
-        title=" Total number of females participated in Olympics",
-    )
-    fig3.update_xaxes(tickangle=45)
-    return fig3
 
 # -> Renders females participated by country
 def female_part():
@@ -112,6 +75,7 @@ def female_part():
                 figure=female_participation()
             ),
         ])
+
 
 
 # Cross country skiing functions. used to plot xcs._____________________________
@@ -136,17 +100,16 @@ def xcs_individual():
             dcc.Graph(id="xcs-individual", figure=total_individual_xcs_plot())
         ]
     )
+
+def xcs_germany_plot():
+    return html.Div(
+        [
+            dcc.Graph(id="xcs-germany-plot", figure=germany_xcs())
+        ]
+    )
 #________________________________________________________________
 
 
-# football sport
-def sport_participation():
-    df_sp = pd.DataFrame(df_merge.groupby(["Sport","region"])[["Medal"]].value_counts()).reset_index()
-    sport = df_sp[df_sp["Sport"] == "Football"]
-    fig4 = px.bar(sport, x="region",
-    y=0,color ="Medal",text_auto=True,
-    labels={"Sport": "Sport", "0": "Number of medals"}, title= "Countries who won medals on Football")
-    return fig4
     
 # -> Renders top sports participated by country
 def sport_part():
@@ -158,8 +121,6 @@ def sport_part():
                 figure=sport_participation()
             ),
         ])
- # 
-
 
 # ----- Divs & dbc.Cards & other componentes ----- #
 
@@ -194,6 +155,7 @@ def search_country(css_class=None):
 
             html.Div(id='country-select-output')], className=css_class)
 
+
 # First box - contains country specific graphs
 def div1():
     return html.Div([
@@ -206,27 +168,25 @@ def div1():
         dbc.Row(
             [
                 dbc.Col(html.Div(seasonal_pie()), md=6),
-                dbc.Col(html.Div(sport_participation()), md=6),
+                dbc.Col(html.Div(female_part()), md=6),
             ])
-    ])
+
+            ], style={'marginRight': 15, 'marginLeft': 15, 'marginBottom': 50, 'marginTop': 25}
+    )
+
+
+
     
 
 
-
+ # contains sports graphs
 def div2():
      return dbc.Card([
-            html.H1('This is div2'),
+            html.H1(),
 
-            html.Div('Grapically represents women empowerment.'),
-            
+            html.Div(),
 
-            dcc.Dropdown(
-                options=[{'label': i, 'value': i} for i in df_germany.columns],
-                value='Sex',
-                id='dropdown2',
-                style={"width": "50%", "offset":1,},
-                clearable=False,
-            ),
+
         dbc.Row(
             [
                 dbc.Col(html.Div(xcs_women()), md=6),
@@ -236,11 +196,15 @@ def div2():
         ),
         dbc.Row(
             [
-                dbc.Col(html.Div(xcs_individual()), md=6)
+                dbc.Col(html.Div(xcs_individual()), md=6),
+                 dbc.Col(html.Div(sport_part()), md=6)
             ]
         )
         ])
 
+
+         
+       
 
 
     # New Div for all elements in the new 'row' of the page
@@ -248,6 +212,7 @@ def div2():
 def div3():
     return dbc.Card([
         html.H1(children='Hello Dash'),
+        
 
         html.Div(children='''
             Dash: Top medal analysis.
@@ -255,10 +220,15 @@ def div3():
         dcc.Dropdown(
                 options=[{'label': i, 'value': i} for i in df_germany.columns],
                 value='Medal',
-                id='dropdown3',
+                id='xcs-germany-plot',
                 style={"width": "50%", "offset":1,},
                 clearable=False,
             ),
+                    dbc.Row(
+            [
+                dbc.Col(html.Div(xcs_germany_plot()), md=10)
+            ]
+        )
     ])
 
 
@@ -268,9 +238,8 @@ def about_box():
     dcc.Markdown('''
 ## About
 This tool should be used for estimates only. Data integrity not guaranteed. Use at own risk. 
-- This is markdown btw.
-- Kinda neat.
- Skämt åsido - I'm tired af and will continue tomorrow. Will push to my branch so you can have a look and decide what we should do.
+- Placeholder text.
+
     '''),
     
     style={'marginRight': 15, 'marginLeft': 15, 'marginBottom': 50, 'marginTop': 25})
@@ -287,7 +256,9 @@ def footer(value="Default value: Hellö."):
 
 @app.callback(
       Output(component_id='country-select-output', component_property='children'),
-      Input(component_id='search-box-user-input', component_property='value'))
+      #Output(component_id='xcs-germany-plot', component_property='children'),
+      Input(component_id='search-box-user-input', component_property='value'),)
+     # Input(component_id='xcs-germany-plot', component_property='value'))
 
 def update_output_div(input_value):
     if input_value == None:
@@ -353,7 +324,7 @@ if __name__ == '__main__':
 
         # Info about all countries
         info_box((("All countries " + "\U0001F30E")),"Sport specific", "olympic-act1"),
-        div2(),
+        div2(),div3(),
 
         # About us and the project, idk?
         about_box(),
