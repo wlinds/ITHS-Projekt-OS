@@ -24,6 +24,8 @@ from graph import germany_xcs
 # initialize app
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.UNITED]) # bootstrap theme
 
+
+server = app.server
 # ----- Figure functions followed by return function ----- #
 
 def no_bg(fig: px.Figure) -> px.Figure:
@@ -177,12 +179,12 @@ def div1():
     
 
 
-
+ # contains sports graphs
 def div2():
      return dbc.Card([
-            html.H1('Sport statstics'),
+            html.H1(),
 
-            html.Div('Grapically represents sport statstics of every country.'),
+            html.Div(),
 
 
         dbc.Row(
@@ -197,8 +199,7 @@ def div2():
                 dbc.Col(html.Div(xcs_individual()), md=6),
                  dbc.Col(html.Div(sport_part()), md=6)
             ]
-        ),
-
+        )
         ])
 
 
